@@ -1,8 +1,8 @@
 package dev.radis.dummock.view
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
-import dev.radis.dummock.R
+import androidx.appcompat.app.AppCompatActivity
 import dev.radis.dummock.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -11,5 +11,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.mainBtnNewMock.setOnClickListener {
+            startActivity(Intent(this, MapActivity::class.java))
+        }
+
     }
 }
