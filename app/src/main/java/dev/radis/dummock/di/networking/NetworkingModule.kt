@@ -32,6 +32,7 @@ class NetworkingModule {
         return GsonConverterFactory.create()
     }
 
+    @Singleton
     @Provides
     fun provideRetrofit(
         okhttp: Lazy<OkHttpClient>,
