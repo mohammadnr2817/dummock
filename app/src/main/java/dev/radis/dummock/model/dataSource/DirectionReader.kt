@@ -21,7 +21,7 @@ class DirectionReader @Inject constructor(
                 "${input.destination.lat},${input.destination.lng}"
             )
             if (!response.isSuccessful) {
-                return Failure(Throwable(""))
+                return Failure(Exception("Response exception!"))
             }
             val points = arrayListOf<Point>()
             response.body()?.let { body ->
@@ -34,7 +34,7 @@ class DirectionReader @Inject constructor(
                 }
                 return Success(points)
             } ?: let {
-                return Failure(Exception(""))
+                return Failure(Exception("Response body exception!"))
             }
         } catch (t: Throwable) {
             return Failure(t)
