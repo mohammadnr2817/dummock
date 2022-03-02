@@ -46,7 +46,7 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
     implementation 'com.airbnb.android:lottie:4.2.2'
 
     implementation "com.google.dagger:dagger:$dagger_version"
@@ -56,4 +56,13 @@ dependencies {
     implementation "com.google.code.gson:gson:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.squareup.okhttp3:logging-interceptor:4.9.3"
+
+    //Neshan sdk library
+    implementation 'neshan-android-sdk:mobile-sdk:1.0.0'
+    implementation 'neshan-android-sdk:services-sdk:1.0.0'
+    implementation 'neshan-android-sdk:common-sdk:0.0.1'
+
+    //Play Services
+    implementation 'com.google.android.gms:play-services-gcm:17.0.0'
+    implementation 'com.google.android.gms:play-services-location:19.0.1'
 }
