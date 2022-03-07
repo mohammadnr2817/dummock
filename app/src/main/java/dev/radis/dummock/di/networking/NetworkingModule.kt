@@ -4,7 +4,7 @@ import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import dev.radis.dummock.model.api.NeshanApiService
-import dev.radis.dummock.utils.constants.StringConstants.BASE_URL
+import dev.radis.dummock.utils.constants.StringConstants.BASE_DIRECTION_URL
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -42,7 +42,7 @@ class NetworkingModule {
             .callFactory {
                 okhttp.get().newCall(it)
             }
-            .baseUrl(BASE_URL)
+            .baseUrl(BASE_DIRECTION_URL)
             .addConverterFactory(gsonConverterFactory)
             .build()
     }
