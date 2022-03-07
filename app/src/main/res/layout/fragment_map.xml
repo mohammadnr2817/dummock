@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.MapActivity">
+    tools:context=".view.fragment.MapFragment">
 
     <org.neshan.mapsdk.MapView
         android:id="@+id/mapNeshanMapView"

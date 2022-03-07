@@ -1,9 +1,10 @@
 package dev.radis.dummock.di.map
 
 import dagger.Component
+import dev.radis.dummock.di.activity.ActivityScope
 import dev.radis.dummock.di.repository.RepositoryComponent
 import dev.radis.dummock.di.viewmodel.ViewModelModule
-import dev.radis.dummock.view.MapActivity
+import dev.radis.dummock.view.fragment.MapFragment
 
 @Component(
     dependencies = [RepositoryComponent::class],
@@ -12,6 +13,6 @@ import dev.radis.dummock.view.MapActivity
 @ActivityScope
 interface MapComponent {
 
-    fun inject(activity: MapActivity)
+    fun inject(fragment: MapFragment)
 
 }

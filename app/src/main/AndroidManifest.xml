@@ -10,10 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Dummock">
         <activity
-            android:name=".view.MapActivity"
-            android:exported="false" />
-        <activity
-            android:name=".view.MainActivity"
+            android:name=".view.activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
