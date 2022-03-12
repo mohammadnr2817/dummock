@@ -12,6 +12,43 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:fontFamily">@font/vazir_regular</item>
     </style>
+
+    <style name="DButton" parent="Widget.MaterialComponents.Button">
+        <item name="cornerRadius">@dimen/default_corner_radius</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconSize">16dp</item>
+        <item name="android:padding">@dimen/default_margin</item>
+    </style>
+
+    <style name="DButton.Outline" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="cornerRadius">@dimen/default_corner_radius</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconSize">16dp</item>
+        <item name="android:padding">@dimen/default_margin</item>
+    </style>
+
+    <style name="DButton.Primary.Active" parent="DButton">
+        <item name="backgroundColor">@color/purple_500</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="iconTint">@android:color/white</item>
+    </style>
+
+    <style name="DButton.Outline.Primary.Active" parent="DButton.Outline">
+        <item name="strokeColor">@color/purple_700</item>
+    </style>
+
+    <style name="DButton.Outline.Primary.InActive" parent="DButton.Outline">
+        <item name="strokeColor">@android:color/darker_gray</item>
+        <item name="android:textColor">@android:color/darker_gray</item>
+        <item name="iconTint">@android:color/darker_gray</item>
+    </style>
+
+    <style name="DButton.Outline.InActive" parent="DButton.Outline">
+        <item name="strokeColor">@android:color/darker_gray</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="iconTint">@android:color/black</item>
+    </style>
+
 </resources>
