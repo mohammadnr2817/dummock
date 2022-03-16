@@ -19,8 +19,28 @@
             android:background="@android:color/white"
             android:padding="@dimen/default_margin">
 
+            <TextView
+                android:id="@+id/mapTxtHelper"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/txt_map_help"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/mapViewTopViews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:constraint_referenced_ids="mapImgSwitchRoutes,mapViewRoutes" />
+
             <ImageView
-                android:id="@+id/mapImgChangeRoutes"
+                android:id="@+id/mapImgSwitchRoutes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="?selectableItemBackgroundBorderless"
@@ -40,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/mapImgChangeRoutes"
+                app:layout_constraintStart_toEndOf="@id/mapImgSwitchRoutes"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.button.MaterialButton
@@ -80,6 +100,7 @@
 
     <include
         android:id="@+id/mapViewBottom"
-        layout="@layout/btm_sheet_route_detail" />
+        layout="@layout/btm_sheet_route_detail"
+        android:visibility="gone" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,214 +1,215 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/btmSheetRouteDetailRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
-    android:clickable="true"
-    android:focusable="true"
     app:behavior_hideable="false"
     app:behavior_peekHeight="100dp"
+    app:cardCornerRadius="@dimen/default_corner_radius"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/btmSheetRouteDetailGuideTop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="@dimen/default_margin" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/btmSheetRouteDetailGuideBottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_end="@dimen/default_margin" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/btmSheetRouteDetailGuideLeft"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="@dimen/default_margin" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/btmSheetRouteDetailGuideRight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="@dimen/default_margin" />
-
-    <ProgressBar
-        android:id="@+id/btmSheetRouteDetailProgress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminateTint="@color/purple_500"
-        app:layout_constraintEnd_toEndOf="@id/btmSheetRouteDetailGuideRight"
-        app:layout_constraintStart_toStartOf="@id/btmSheetRouteDetailGuideLeft"
-        app:layout_constraintTop_toTopOf="@id/btmSheetRouteDetailGuideTop" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/btmSheetRouteDetailMainViews"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/btmSheetRouteDetailGuideBottom"
-        app:layout_constraintEnd_toEndOf="@id/btmSheetRouteDetailGuideRight"
-        app:layout_constraintStart_toStartOf="@id/btmSheetRouteDetailGuideLeft"
-        app:layout_constraintTop_toTopOf="@id/btmSheetRouteDetailGuideTop">
+        android:clickable="true"
+        android:focusable="true">
 
-        <TextView
-            android:id="@+id/btmSheetRouteDetailTxtRouteInfo"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/btmSheetRouteDetailGuideTop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/txt_route_info"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <LinearLayout
-            android:id="@+id/btmSheetRouteDetailViewRouteInfo"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="end"
             android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/btmSheetRouteDetailBtnStartNavPeek"
-            app:layout_constraintTop_toBottomOf="@id/btmSheetRouteDetailTxtRouteInfo">
+            app:layout_constraintGuide_begin="@dimen/default_margin" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:text="@string/txt_kilometer"
-                android:textSize="16sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                tools:text="10" />
-
-            <View
-                android:layout_width="0.5dp"
-                android:layout_height="match_parent"
-                android:layout_margin="8dp"
-                android:background="@android:color/darker_gray" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:text="@string/txt_minute"
-                android:textSize="16sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                tools:text="32" />
-
-        </LinearLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btmSheetRouteDetailBtnStartNavPeek"
-            style="@style/DButton.Primary.Active"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/btmSheetRouteDetailGuideBottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/txt_start"
-            app:icon="@drawable/ic_baseline_navigation_24"
-            app:layout_constraintBottom_toBottomOf="@id/btmSheetRouteDetailViewRouteInfo"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/btmSheetRouteDetailViewRouteInfo" />
+            android:orientation="horizontal"
+            app:layout_constraintGuide_end="@dimen/default_margin" />
 
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/btmSheetRouteDetailGpSettings"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/btmSheetRouteDetailGuideLeft"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="invisible"
-            app:constraint_referenced_ids="btmSheetRouteDetailTxtRouteSettings,btmSheetRouteDetailViewRouteSettings,btmSheetRouteDetailBtnStartNav" />
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/default_margin" />
 
-        <TextView
-            android:id="@+id/btmSheetRouteDetailTxtRouteSettings"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/btmSheetRouteDetailGuideRight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/txt_route_settings"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btmSheetRouteDetailViewRouteInfo" />
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="@dimen/default_margin" />
 
-        <HorizontalScrollView
-            android:id="@+id/btmSheetRouteDetailViewRouteSettings"
+        <ProgressBar
+            android:id="@+id/btmSheetRouteDetailProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/purple_500"
+            app:layout_constraintEnd_toEndOf="@id/btmSheetRouteDetailGuideRight"
+            app:layout_constraintStart_toStartOf="@id/btmSheetRouteDetailGuideLeft"
+            app:layout_constraintTop_toTopOf="@id/btmSheetRouteDetailGuideTop" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/btmSheetRouteDetailMainViews"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layoutDirection="rtl"
-            android:scrollbars="none"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btmSheetRouteDetailTxtRouteSettings">
+            app:layout_constraintBottom_toBottomOf="@id/btmSheetRouteDetailGuideBottom"
+            app:layout_constraintEnd_toEndOf="@id/btmSheetRouteDetailGuideRight"
+            app:layout_constraintStart_toStartOf="@id/btmSheetRouteDetailGuideLeft"
+            app:layout_constraintTop_toTopOf="@id/btmSheetRouteDetailGuideTop">
+
+            <TextView
+                android:id="@+id/btmSheetRouteDetailTxtRouteInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_route_info"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:id="@+id/btmSheetRouteDetailViewRouteInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:gravity="end"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btmSheetRouteDetailBtnStartNavPeek"
+                app:layout_constraintTop_toBottomOf="@id/btmSheetRouteDetailTxtRouteInfo">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btmSheetRouteDetailSettingsTypeCar"
-                    style="@style/DButton.Outline.Primary.Active"
+                <TextView
+                    android:id="@+id/btmSheetRouteDetailTxtRouteDistance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/default_margin"
-                    android:text="@string/txt_car"
-                    app:icon="@drawable/ic_baseline_directions_car_24" />
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    tools:text="10 کیلومتر" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btmSheetRouteDetailSettingsTypeWalk"
-                    style="@style/DButton.Outline.Primary.InActive"
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:background="@android:color/darker_gray" />
+
+                <TextView
+                    android:id="@+id/btmSheetRouteDetailTxtRouteDuration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/default_margin"
-                    android:text="@string/txt_walk"
-                    app:icon="@drawable/ic_baseline_directions_walk_24" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btmSheetRouteDetailSettingsSpeed"
-                    style="@style/DButton.Outline.Primary.InActive"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/default_margin"
-                    android:text="@string/txt_default_speed" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btmSheetRouteDetailSettingsDelay"
-                    style="@style/DButton.Outline.Primary.InActive"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/txt_delay_no"
-                    android:visibility="gone" />
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    tools:text="32 دقیقه" />
 
             </LinearLayout>
 
-        </HorizontalScrollView>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btmSheetRouteDetailBtnStartNavPeek"
+                style="@style/DButton.Primary.Active"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_start"
+                app:icon="@drawable/ic_baseline_navigation_24"
+                app:layout_constraintBottom_toBottomOf="@id/btmSheetRouteDetailViewRouteInfo"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/btmSheetRouteDetailViewRouteInfo" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btmSheetRouteDetailBtnStartNav"
-            style="@style/DButton.Primary.Active"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
-            android:text="@string/txt_start"
-            app:icon="@drawable/ic_baseline_navigation_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btmSheetRouteDetailViewRouteSettings" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/btmSheetRouteDetailGpSettings"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:alpha="0"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btmSheetRouteDetailViewRouteInfo">
 
+
+                <TextView
+                    android:id="@+id/btmSheetRouteDetailTxtRouteSettings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/txt_route_settings"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <HorizontalScrollView
+                    android:id="@+id/btmSheetRouteDetailViewRouteSettings"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layoutDirection="rtl"
+                    android:scrollbars="none"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/btmSheetRouteDetailTxtRouteSettings">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="end"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btmSheetRouteDetailSettingsTypeCar"
+                            style="@style/DButton.Outline.Primary.Active"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/default_margin"
+                            android:text="@string/txt_car"
+                            app:icon="@drawable/ic_baseline_directions_car_24" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btmSheetRouteDetailSettingsTypeBike"
+                            style="@style/DButton.Outline.Primary.InActive"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/default_margin"
+                            android:text="@string/txt_bike"
+                            app:icon="@drawable/ic_baseline_directions_bike_24" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btmSheetRouteDetailSettingsSpeed"
+                            style="@style/DButton.Outline.Primary.InActive"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/default_margin"
+                            android:text="@string/txt_default_speed" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btmSheetRouteDetailSettingsDelay"
+                            style="@style/DButton.Outline.Primary.InActive"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/txt_delay_no"
+                            android:visibility="gone" />
+
+                    </LinearLayout>
+
+                </HorizontalScrollView>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btmSheetRouteDetailBtnStartNav"
+                    style="@style/DButton.Primary.Active"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/default_margin"
+                    android:text="@string/txt_start"
+                    app:icon="@drawable/ic_baseline_navigation_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/btmSheetRouteDetailViewRouteSettings" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

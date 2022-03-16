@@ -9,6 +9,7 @@
     <string name="txt_delay_no">بدون توقف</string>
     <string name="txt_default_speed">سرعت 50 km/h</string>
     <string name="txt_walk">پیاده</string>
+    <string name="txt_bike">موتور</string>
     <string name="txt_car">خودرو</string>
     <string name="txt_route_settings">تنظیمات مسیر</string>
     <string name="txt_route_info">اطلاعات مسیر</string>
