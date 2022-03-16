@@ -1,4 +1,4 @@
-package dev.radis.dummock.di.map
+package dev.radis.dummock.di.activity
 
 import javax.inject.Scope
 
