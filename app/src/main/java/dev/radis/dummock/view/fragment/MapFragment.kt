@@ -11,6 +11,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.airbnb.paris.extensions.style
 import com.carto.graphics.Color
 import com.carto.styles.LineStyle
 import com.carto.styles.LineStyleBuilder
@@ -24,9 +25,12 @@ import dev.radis.dummock.di.map.MapComponentBuilder
 import dev.radis.dummock.model.entity.DirectionModel
 import dev.radis.dummock.model.entity.Point
 import dev.radis.dummock.utils.SingleUse
+import dev.radis.dummock.utils.constants.DirectionType
 import dev.radis.dummock.utils.constants.NumericConstants.FIRST_LOCATION_INDEX
 import dev.radis.dummock.utils.constants.NumericConstants.POLYLINE_WIDTH
 import dev.radis.dummock.utils.constants.NumericConstants.SECOND_LOCATION_INDEX
+import dev.radis.dummock.utils.constants.StringConstants.DIRECTION_TYPE_BIKE
+import dev.radis.dummock.utils.constants.StringConstants.DIRECTION_TYPE_CAR
 import dev.radis.dummock.utils.mvi.MviView
 import dev.radis.dummock.view.intent.MapIntent
 import dev.radis.dummock.view.state.MapState
@@ -100,6 +104,18 @@ class MapFragment : Fragment(), MviView<MapState> {
             )
         }
 
+        binding.mapViewBottom.btmSheetRouteDetailSettingsTypeCar.setOnClickListener {
+            viewModel.handleIntent(
+                MapIntent.SwitchDirectionTypeIntent(DIRECTION_TYPE_CAR)
+            )
+        }
+
+        binding.mapViewBottom.btmSheetRouteDetailSettingsTypeBike.setOnClickListener {
+            viewModel.handleIntent(
+                MapIntent.SwitchDirectionTypeIntent(DIRECTION_TYPE_BIKE)
+            )
+        }
+
     }
 
     override fun onDestroyView() {
@@ -114,7 +130,7 @@ class MapFragment : Fragment(), MviView<MapState> {
         if (state.message != null) messageState(state.message.value)
         addMarkerState(state.markers)
         addRouteDetailsState(state.direction)
-
+        switchDirectionType(state.directionRequestType)
     }
 
     private fun loadingState(isLoading: Boolean) {
@@ -152,7 +168,6 @@ class MapFragment : Fragment(), MviView<MapState> {
         details?.let {
             it.ifNotUsedBefore()?.let { model ->
                 changeRouteDetailsTexts(model)
-                //binding.mapViewBottom.btmSheetRouteDetailSettingsTypeCar.style(R.style.DButton_Outline_Primary_InActive)
 
                 removePreviousPolyline()
 
@@ -194,6 +209,19 @@ class MapFragment : Fragment(), MviView<MapState> {
         binding.mapBtnDestination.text = model.destination?.toString()
         binding.mapViewBottom.btmSheetRouteDetailTxtRouteDistance.text = model.distance
         binding.mapViewBottom.btmSheetRouteDetailTxtRouteDuration.text = model.duration
+    }
+
+    private fun switchDirectionType(@DirectionType directionType: String) {
+        when (directionType) {
+            DIRECTION_TYPE_CAR -> {
+                binding.mapViewBottom.btmSheetRouteDetailSettingsTypeCar.style(R.style.DButton_Outline_Primary_Active)
+                binding.mapViewBottom.btmSheetRouteDetailSettingsTypeBike.style(R.style.DButton_Outline_Primary_InActive)
+            }
+            DIRECTION_TYPE_BIKE -> {
+                binding.mapViewBottom.btmSheetRouteDetailSettingsTypeCar.style(R.style.DButton_Outline_Primary_InActive)
+                binding.mapViewBottom.btmSheetRouteDetailSettingsTypeBike.style(R.style.DButton_Outline_Primary_Active)
+            }
+        }
     }
 
 }

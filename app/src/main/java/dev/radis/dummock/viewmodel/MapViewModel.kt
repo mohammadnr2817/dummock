@@ -6,7 +6,7 @@ import dev.radis.dummock.model.entity.DirectionModel
 import dev.radis.dummock.model.entity.Point
 import dev.radis.dummock.model.repository.DirectionRepository
 import dev.radis.dummock.utils.SingleUse
-import dev.radis.dummock.utils.constants.StringConstants.DIRECTION_TYPE_CAR
+import dev.radis.dummock.utils.constants.DirectionType
 import dev.radis.dummock.utils.mvi.MviModel
 import dev.radis.dummock.view.intent.MapIntent
 import dev.radis.dummock.view.state.MapState
@@ -33,6 +33,23 @@ class MapViewModel @Inject constructor(
                 intent.firstLocationIndex,
                 intent.secondLocationIndex
             )
+            is MapIntent.SwitchDirectionTypeIntent -> changeDirectionType(intent.directionRequestType)
+        }
+    }
+
+    private fun isDirectionTypeSame(@DirectionType directionRequestType: String): Boolean {
+        return directionRequestType == stateFlow.value.directionRequestType
+    }
+
+    private fun changeDirectionType(@DirectionType directionRequestType: String) {
+        if (isDirectionTypeSame(directionRequestType)) return
+        viewModelScope.launch {
+            _stateFlow.emit(
+                stateFlow.value.copy(
+                    directionRequestType = directionRequestType
+                )
+            )
+            getDirectionIfReady()
         }
     }
 
@@ -75,13 +92,15 @@ class MapViewModel @Inject constructor(
     private suspend fun getDirectionIfReady() {
         if (canGetDirection())
             getDirection(
-                //stateFlow.value.direction.value.directionRequestType,
-                DIRECTION_TYPE_CAR,
+                stateFlow.value.directionRequestType,
                 stateFlow.value.markers.value
             )
     }
 
-    private suspend fun getDirection(directionRequestType: String, points: List<Point>) {
+    private suspend fun getDirection(
+        @DirectionType directionRequestType: String,
+        points: List<Point>
+    ) {
         _stateFlow.emit(stateFlow.value.copy(isLoading = SingleUse(true)))
         viewModelScope.launch(Dispatchers.IO) {
             val response = directionRepository.getDirection(directionRequestType, points)

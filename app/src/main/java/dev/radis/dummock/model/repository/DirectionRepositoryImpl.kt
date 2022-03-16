@@ -5,6 +5,7 @@ import dev.radis.dummock.model.dataSource.DirectionReader
 import dev.radis.dummock.model.entity.DirectionModel
 import dev.radis.dummock.model.entity.DirectionRequestModel
 import dev.radis.dummock.model.entity.Point
+import dev.radis.dummock.utils.constants.DirectionType
 import dev.radis.dummock.utils.constants.StringConstants.DUMMOCK_TAG
 import dev.radis.dummock.utils.response.Failure
 import dev.radis.dummock.utils.response.Response
@@ -22,7 +23,7 @@ class DirectionRepositoryImpl @Inject constructor(
     private var coroutineScope = CoroutineScope(Dispatchers.IO)
 
     override suspend fun getDirection(
-        directionRequestType: String,
+        @DirectionType directionRequestType: String,
         points: List<Point>
     ): Response<DirectionModel, Throwable> {
         val result = DirectionModel()
