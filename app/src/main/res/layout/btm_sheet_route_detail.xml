@@ -75,6 +75,7 @@
                 android:id="@+id/btmSheetRouteDetailViewRouteInfo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
                 android:gravity="end"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -116,17 +117,18 @@
                 app:icon="@drawable/ic_baseline_navigation_24"
                 app:layout_constraintBottom_toBottomOf="@id/btmSheetRouteDetailViewRouteInfo"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/btmSheetRouteDetailViewRouteInfo" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/btmSheetRouteDetailGpSettings"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="@dimen/default_margin"
                 android:alpha="0"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btmSheetRouteDetailViewRouteInfo">
+                app:layout_constraintTop_toBottomOf="@id/btmSheetRouteDetailViewRouteInfo"
+                tools:alpha="1">
 
 
                 <TextView
