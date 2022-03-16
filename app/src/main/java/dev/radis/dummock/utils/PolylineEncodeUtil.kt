@@ -46,8 +46,8 @@ object PolylineEncodeUtil {
         var lastLng: Long = 0
         val result = StringBuffer()
         for (point in path) {
-            val lat = Math.round(point.lat * 1e5)
-            val lng = Math.round(point.lng * 1e5)
+            val lat = Math.round(point.lat!! * 1e5)
+            val lng = Math.round(point.lng!! * 1e5)
             val dLat = lat - lastLat
             val dLng = lng - lastLng
             encode(dLat, result)
