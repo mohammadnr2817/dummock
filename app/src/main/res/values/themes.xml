@@ -12,7 +12,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-        <item name="android:fontFamily">@font/vazir_regular</item>
+        <item name="android:fontFamily">@font/vazir_regular_fd</item>
     </style>
 
     <style name="DButton" parent="Widget.MaterialComponents.Button">
