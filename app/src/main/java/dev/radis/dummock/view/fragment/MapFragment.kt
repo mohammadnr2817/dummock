@@ -1,5 +1,6 @@
 package dev.radis.dummock.view.fragment
 
+import android.content.res.ColorStateList
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,13 +12,13 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.airbnb.paris.extensions.style
 import com.carto.graphics.Color
 import com.carto.styles.LineStyle
 import com.carto.styles.LineStyleBuilder
 import com.carto.styles.MarkerStyleBuilder
 import com.carto.utils.BitmapUtils
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import dev.radis.dummock.R
 import dev.radis.dummock.databinding.FragmentMapBinding
@@ -214,13 +215,34 @@ class MapFragment : Fragment(), MviView<MapState> {
     private fun switchDirectionType(@DirectionType directionType: String) {
         when (directionType) {
             DIRECTION_TYPE_CAR -> {
-                binding.mapViewBottom.btmSheetRouteDetailSettingsTypeCar.style(R.style.DButton_Outline_Primary_Active)
-                binding.mapViewBottom.btmSheetRouteDetailSettingsTypeBike.style(R.style.DButton_Outline_Primary_InActive)
+                setButtonActiveState(binding.mapViewBottom.btmSheetRouteDetailSettingsTypeCar, true)
+                setButtonActiveState(
+                    binding.mapViewBottom.btmSheetRouteDetailSettingsTypeBike,
+                    false
+                )
             }
             DIRECTION_TYPE_BIKE -> {
-                binding.mapViewBottom.btmSheetRouteDetailSettingsTypeCar.style(R.style.DButton_Outline_Primary_InActive)
-                binding.mapViewBottom.btmSheetRouteDetailSettingsTypeBike.style(R.style.DButton_Outline_Primary_Active)
+                setButtonActiveState(
+                    binding.mapViewBottom.btmSheetRouteDetailSettingsTypeCar,
+                    false
+                )
+                setButtonActiveState(
+                    binding.mapViewBottom.btmSheetRouteDetailSettingsTypeBike,
+                    true
+                )
             }
+        }
+    }
+
+    private fun setButtonActiveState(button: MaterialButton, active: Boolean) {
+        val stateColor = ContextCompat.getColor(
+            requireNotNull(context),
+            if (active) R.color.purple_700 else R.color.grey_700
+        )
+        button.apply {
+            setTextColor(stateColor)
+            strokeColor = ColorStateList.valueOf(stateColor)
+            iconTint = ColorStateList.valueOf(stateColor)
         }
     }
 
