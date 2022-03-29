@@ -34,6 +34,17 @@ class MapViewModel @Inject constructor(
                 intent.secondLocationIndex
             )
             is MapIntent.SwitchDirectionTypeIntent -> changeDirectionType(intent.directionRequestType)
+            is MapIntent.CopyToClipboard -> copyToClipboard(intent.value)
+        }
+    }
+
+    private fun copyToClipboard(value: String) {
+        viewModelScope.launch {
+            _stateFlow.emit(
+                stateFlow.value.copy(
+                    clipboardValue = SingleUse(value)
+                )
+            )
         }
     }
 

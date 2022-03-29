@@ -13,5 +13,6 @@ data class MapState(
     val markers: SingleUse<List<Point>> = SingleUse(emptyList()),
     val direction: SingleUse<DirectionModel>? = null,
     var directionRequestType: String = StringConstants.DIRECTION_TYPE_CAR,
-    val speed: Int = NumericConstants.DEFAULT_SPEED_KMH
+    val speed: Int = NumericConstants.DEFAULT_SPEED_KMH,
+    val clipboardValue: SingleUse<String>? = null,
 ) : MviState

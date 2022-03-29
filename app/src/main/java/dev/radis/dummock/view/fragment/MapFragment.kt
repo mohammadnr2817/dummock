@@ -1,5 +1,8 @@
 package dev.radis.dummock.view.fragment
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -117,6 +120,20 @@ class MapFragment : Fragment(), MviView<MapState> {
             )
         }
 
+        binding.mapBtnOrigin.setOnLongClickListener {
+            viewModel.handleIntent(
+                MapIntent.CopyToClipboard(binding.mapBtnOrigin.text.toString())
+            )
+            false
+        }
+
+        binding.mapBtnDestination.setOnLongClickListener {
+            viewModel.handleIntent(
+                MapIntent.CopyToClipboard(binding.mapBtnDestination.text.toString())
+            )
+            false
+        }
+
     }
 
     override fun onDestroyView() {
@@ -129,9 +146,18 @@ class MapFragment : Fragment(), MviView<MapState> {
             loadingState(it.value)
         }
         if (state.message != null) messageState(state.message.value)
+        if (state.clipboardValue != null) copyToClipboardState(state.clipboardValue.value)
         addMarkerState(state.markers)
         addRouteDetailsState(state.direction)
         switchDirectionType(state.directionRequestType)
+    }
+
+    private fun copyToClipboardState(value: String) {
+        // Gets a handle to the clipboard service
+        val clipboard =
+            context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        clipboard.setPrimaryClip(ClipData.newPlainText("Dummock", value))
+        messageState("Copied to clipboard.")
     }
 
     private fun loadingState(isLoading: Boolean) {
