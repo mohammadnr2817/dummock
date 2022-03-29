@@ -8,8 +8,8 @@ object Logit {
     /**
      * @param message
      */
-    fun d(message: String?) {
-        Log.d(LOGIT_TAG, "$message")
+    fun d(message: Any) {
+        Log.d(LOGIT_TAG, message.toString())
     }
 
 }
