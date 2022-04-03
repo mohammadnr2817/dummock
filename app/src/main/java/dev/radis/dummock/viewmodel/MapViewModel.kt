@@ -1,5 +1,8 @@
 package dev.radis.dummock.viewmodel
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.radis.dummock.model.entity.DirectionModel
@@ -7,6 +10,7 @@ import dev.radis.dummock.model.entity.Point
 import dev.radis.dummock.model.repository.DirectionRepository
 import dev.radis.dummock.utils.SingleUse
 import dev.radis.dummock.utils.constants.DirectionType
+import dev.radis.dummock.utils.constants.StringConstants.COPIED
 import dev.radis.dummock.utils.mvi.MviModel
 import dev.radis.dummock.view.intent.MapIntent
 import dev.radis.dummock.view.state.MapState
@@ -18,11 +22,18 @@ import java.util.*
 import javax.inject.Inject
 
 class MapViewModel @Inject constructor(
-    private val directionRepository: DirectionRepository
+    private val directionRepository: DirectionRepository,
+    context: Context
 ) : ViewModel(), MviModel<MapIntent, MapState> {
 
     private val _stateFlow: MutableStateFlow<MapState> = MutableStateFlow(MapState())
     override val stateFlow: StateFlow<MapState> = _stateFlow
+    private var clipboardManager: ClipboardManager? = null
+
+    init {
+        clipboardManager =
+            context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    }
 
     override fun handleIntent(intent: MapIntent) {
         when (intent) {
@@ -40,9 +51,10 @@ class MapViewModel @Inject constructor(
 
     private fun copyToClipboard(value: String) {
         viewModelScope.launch {
+            clipboardManager?.setPrimaryClip(ClipData.newPlainText("Dummock", value))
             _stateFlow.emit(
                 stateFlow.value.copy(
-                    clipboardValue = SingleUse(value)
+                    message = SingleUse(COPIED)
                 )
             )
         }

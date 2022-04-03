@@ -2,12 +2,13 @@ package dev.radis.dummock.di.map
 
 import dagger.Component
 import dev.radis.dummock.di.activity.ActivityScope
+import dev.radis.dummock.di.application.AppComponent
 import dev.radis.dummock.di.repository.RepositoryComponent
 import dev.radis.dummock.di.viewmodel.ViewModelModule
 import dev.radis.dummock.view.fragment.MapFragment
 
 @Component(
-    dependencies = [RepositoryComponent::class],
+    dependencies = [RepositoryComponent::class, AppComponent::class],
     modules = [ViewModelModule::class]
 )
 @ActivityScope

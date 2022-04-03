@@ -14,5 +14,4 @@ data class MapState(
     val direction: SingleUse<DirectionModel>? = null,
     var directionRequestType: String = StringConstants.DIRECTION_TYPE_CAR,
     val speed: Int = NumericConstants.DEFAULT_SPEED_KMH,
-    val clipboardValue: SingleUse<String>? = null,
 ) : MviState
