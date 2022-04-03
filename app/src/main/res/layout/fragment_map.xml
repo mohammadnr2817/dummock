@@ -69,8 +69,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/default_margin"
-                    android:textAlignment="textStart"
-                    android:textDirection="rtl"
+                    android:gravity="end"
                     app:icon="@drawable/ic_baseline_navigation_24"
                     app:iconGravity="end"
                     tools:text="مکان فعلی" />
@@ -81,8 +80,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/default_margin"
-                    android:textAlignment="textStart"
-                    android:textDirection="rtl"
+                    android:gravity="end"
                     app:icon="@drawable/ic_baseline_place_24"
                     app:iconGravity="end"
                     tools:text="آدرس مقصد مورد نظر" />

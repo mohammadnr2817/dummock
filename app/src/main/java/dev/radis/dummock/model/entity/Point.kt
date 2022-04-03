@@ -7,7 +7,7 @@ data class Point(val lat: Double, val lng: Double) {
     }
 
     override fun toString(): String {
-        return String.format("%.2f,%.2f", lat, lng)
+        return String.format("%.4f, %.4f", lat, lng)
     }
 
 }

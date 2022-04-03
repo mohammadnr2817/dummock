@@ -35,6 +35,7 @@ import dev.radis.dummock.utils.constants.NumericConstants.POLYLINE_WIDTH
 import dev.radis.dummock.utils.constants.NumericConstants.SECOND_LOCATION_INDEX
 import dev.radis.dummock.utils.constants.StringConstants.DIRECTION_TYPE_BIKE
 import dev.radis.dummock.utils.constants.StringConstants.DIRECTION_TYPE_CAR
+import dev.radis.dummock.utils.extension.toPersianDigits
 import dev.radis.dummock.utils.mvi.MviView
 import dev.radis.dummock.view.intent.MapIntent
 import dev.radis.dummock.view.state.MapState
@@ -232,10 +233,12 @@ class MapFragment : Fragment(), MviView<MapState> {
     }
 
     private fun changeRouteDetailsTexts(model: DirectionModel) {
-        binding.mapBtnOrigin.text = model.origin?.toString()
-        binding.mapBtnDestination.text = model.destination?.toString()
-        binding.mapViewBottom.btmSheetRouteDetailTxtRouteDistance.text = model.distance
-        binding.mapViewBottom.btmSheetRouteDetailTxtRouteDuration.text = model.duration
+        binding.mapBtnOrigin.text = model.origin?.toString()?.toPersianDigits()
+        binding.mapBtnDestination.text = model.destination?.toString()?.toPersianDigits()
+        binding.mapViewBottom.btmSheetRouteDetailTxtRouteDistance.text =
+            model.distance?.toPersianDigits()
+        binding.mapViewBottom.btmSheetRouteDetailTxtRouteDuration.text =
+            model.duration?.toPersianDigits()
     }
 
     private fun switchDirectionType(@DirectionType directionType: String) {
