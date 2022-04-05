@@ -9,6 +9,6 @@ import dagger.Module
 interface AppModule {
 
     @Binds
-    fun provideContext(application: Application): Context
+    fun bindContext(application: Application): Context
 
 }
