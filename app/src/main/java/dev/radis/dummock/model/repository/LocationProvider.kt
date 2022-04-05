@@ -15,6 +15,11 @@ import dev.radis.dummock.model.entity.Point
 import dev.radis.dummock.utils.JTSUtils
 import dev.radis.dummock.utils.LocationUtils
 import dev.radis.dummock.utils.constants.NumericConstants.LINE_INDEX_INTERVAL
+import dev.radis.dummock.utils.constants.NumericConstants.PROVIDER_ACCURACY
+import dev.radis.dummock.utils.constants.NumericConstants.PROVIDER_BEARING_ACCURACY_DEGREES
+import dev.radis.dummock.utils.constants.NumericConstants.PROVIDER_SPEED_ACCURACY_METERS_PER_SECOND
+import dev.radis.dummock.utils.constants.NumericConstants.PROVIDER_VERTICAL_ACCURACY_METERS
+import dev.radis.dummock.utils.constants.StringConstants.PROVIDER_GPS
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.flow
 import org.locationtech.jts.linearref.LengthIndexedLine
@@ -89,7 +94,7 @@ class LocationProvider : Service() {
     private fun addMockProvider() {
         try {
             locationManager.addTestProvider(
-                "gps", // TODO: move to const
+                PROVIDER_GPS,
                 false,
                 false,
                 false,
@@ -100,28 +105,28 @@ class LocationProvider : Service() {
                 Criteria.POWER_LOW,
                 Criteria.ACCURACY_FINE
             )
-            locationManager.setTestProviderEnabled("gps", true)
+            locationManager.setTestProviderEnabled(PROVIDER_GPS, true)
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
     private fun submitLocationToProvider(point: Point) {
-        val location = Location("gps").apply {
+        val location = Location(PROVIDER_GPS).apply {
             latitude = point.lat
             longitude = point.lng
             altitude = 0.0
             speed = this@LocationProvider.speed
             time = System.currentTimeMillis()
             elapsedRealtimeNanos = SystemClock.elapsedRealtimeNanos()
-            accuracy = 5F // TODO: move to const
+            accuracy = PROVIDER_ACCURACY
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                bearingAccuracyDegrees = 0.1f // TODO: move to const
-                verticalAccuracyMeters = 0.1f // TODO: move to const
-                speedAccuracyMetersPerSecond = 0.01f // TODO: move to const
+                bearingAccuracyDegrees = PROVIDER_BEARING_ACCURACY_DEGREES
+                verticalAccuracyMeters = PROVIDER_VERTICAL_ACCURACY_METERS
+                speedAccuracyMetersPerSecond = PROVIDER_SPEED_ACCURACY_METERS_PER_SECOND
             }
         }
-        locationManager.setTestProviderLocation("gps", location)
+        locationManager.setTestProviderLocation(PROVIDER_GPS, location)
     }
 
     override fun onDestroy() {

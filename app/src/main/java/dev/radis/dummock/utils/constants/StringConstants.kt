@@ -11,6 +11,7 @@ object StringConstants {
     const val DIRECTION_TYPE_BIKE = "motorcycle"
     const val PERSIAN_DIGITS = "۰۱۲۳۴۵۶۷۸۹"
     const val COPIED = "کپی شد!"
+    const val PROVIDER_GPS = "gps"
 }
 
 @StringDef(DIRECTION_TYPE_CAR, DIRECTION_TYPE_BIKE)
