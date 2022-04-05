@@ -12,9 +12,12 @@ data class Point(val lat: Double, val lng: Double) {
         return String.format("%.4f, %.4f", lat, lng)
     }
 
+    /*
+    Coordinate class: X as longitude, Y as latitude and Z is used to keep the elevation data.
+     */
     companion object {
         fun fromCoordinate(coordinate: Coordinate) =
-            Point(coordinate.x, coordinate.y) // TODO: check x, y
+            Point(coordinate.y, coordinate.x)
     }
 
 }
