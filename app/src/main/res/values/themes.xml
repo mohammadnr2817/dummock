@@ -13,6 +13,7 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="android:fontFamily">@font/vazir_regular_fd</item>
+        <item name="android:navigationBarColor">?attr/colorPrimaryVariant</item>
     </style>
 
     <style name="DButton" parent="Widget.MaterialComponents.Button">
@@ -30,13 +31,13 @@
     </style>
 
     <style name="DButton.Primary.Active" parent="DButton">
-        <item name="backgroundColor">@color/pink_500</item>
+        <item name="backgroundColor">?attr/colorPrimaryVariant</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="iconTint">@android:color/white</item>
     </style>
 
     <style name="DButton.Outline.Primary.Active" parent="DButton.Outline">
-        <item name="strokeColor">@color/pink_700</item>
+        <item name="strokeColor">?attr/colorPrimaryVariant</item>
     </style>
 
     <style name="DButton.Outline.Primary.InActive" parent="DButton.Outline">
