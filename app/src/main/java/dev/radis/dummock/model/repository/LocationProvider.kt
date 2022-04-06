@@ -1,6 +1,9 @@
 package dev.radis.dummock.model.repository
 
 import android.annotation.SuppressLint
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -11,16 +14,24 @@ import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import android.os.SystemClock
+import androidx.core.app.NotificationCompat
+import dev.radis.dummock.R
 import dev.radis.dummock.model.entity.Point
 import dev.radis.dummock.utils.JTSUtils
 import dev.radis.dummock.utils.LocationUtils
+import dev.radis.dummock.utils.constants.NumericConstants.FOREGROUND_NOTIFICATION_ID
 import dev.radis.dummock.utils.constants.NumericConstants.LINE_INDEX_INTERVAL
 import dev.radis.dummock.utils.constants.NumericConstants.PROVIDER_ACCURACY
 import dev.radis.dummock.utils.constants.NumericConstants.PROVIDER_BEARING_ACCURACY_DEGREES
 import dev.radis.dummock.utils.constants.NumericConstants.PROVIDER_SPEED_ACCURACY_METERS_PER_SECOND
 import dev.radis.dummock.utils.constants.NumericConstants.PROVIDER_VERTICAL_ACCURACY_METERS
+import dev.radis.dummock.utils.constants.StringConstants.FOREGROUND_NOTIFICATION_CHANNEL_ID
+import dev.radis.dummock.utils.constants.StringConstants.FOREGROUND_NOTIFICATION_CHANNEL_NAME
+import dev.radis.dummock.utils.constants.StringConstants.FOREGROUND_NOTIFICATION_CONTENT_TITLE
 import dev.radis.dummock.utils.constants.StringConstants.PROVIDER_GPS
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import org.locationtech.jts.linearref.LengthIndexedLine
 
@@ -33,8 +44,16 @@ class LocationProvider : Service() {
     private var speed: Float = 0F
     private lateinit var locationManager: LocationManager
 
+    private val _locationFlow: MutableStateFlow<Point?> = MutableStateFlow(null)
+    val locationFlow: StateFlow<Point?> = _locationFlow
+
     inner class LocationProviderBinder() : Binder() {
         fun getService(): LocationProvider = this@LocationProvider
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        showNotification()
+        return START_NOT_STICKY
     }
 
     override fun onCreate() {
@@ -85,7 +104,6 @@ class LocationProvider : Service() {
         lineIndex = 0.0
     }
 
-
     fun stopProvidingLocations() {
         timerJob?.cancel()
     }
@@ -127,6 +145,48 @@ class LocationProvider : Service() {
             }
         }
         locationManager.setTestProviderLocation(PROVIDER_GPS, location)
+        coroutineScope.launch {
+            _locationFlow.emit(point)
+        }
+    }
+
+    private fun showNotification() {
+        val notification = createNotification()
+        (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).notify(
+            FOREGROUND_NOTIFICATION_ID,
+            notification
+        )
+        startForeground(FOREGROUND_NOTIFICATION_ID, notification)
+    }
+
+    private fun dismissNotification() {
+        (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(
+            FOREGROUND_NOTIFICATION_ID
+        )
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+            return
+        (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+            .createNotificationChannel(
+                NotificationChannel(
+                    FOREGROUND_NOTIFICATION_CHANNEL_ID,
+                    FOREGROUND_NOTIFICATION_CHANNEL_NAME,
+                    NotificationManager.IMPORTANCE_DEFAULT
+                )
+            )
+    }
+
+    private fun createNotification(): Notification {
+        createNotificationChannel()
+        return NotificationCompat.Builder(this, FOREGROUND_NOTIFICATION_CHANNEL_ID)
+            .setContentTitle(FOREGROUND_NOTIFICATION_CONTENT_TITLE)
+            .setSmallIcon(R.drawable.nav_icon)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setOngoing(true)
+            .setSilent(true)
+            .build()
     }
 
     override fun onDestroy() {

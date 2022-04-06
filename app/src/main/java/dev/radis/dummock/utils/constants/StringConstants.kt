@@ -12,6 +12,9 @@ object StringConstants {
     const val PERSIAN_DIGITS = "۰۱۲۳۴۵۶۷۸۹"
     const val COPIED = "کپی شد!"
     const val PROVIDER_GPS = "gps"
+    const val FOREGROUND_NOTIFICATION_CHANNEL_ID = "LocationServiceId"
+    const val FOREGROUND_NOTIFICATION_CHANNEL_NAME = "Location Service"
+    const val FOREGROUND_NOTIFICATION_CONTENT_TITLE = "Dummock is mocking locations!"
 }
 
 @StringDef(DIRECTION_TYPE_CAR, DIRECTION_TYPE_BIKE)
