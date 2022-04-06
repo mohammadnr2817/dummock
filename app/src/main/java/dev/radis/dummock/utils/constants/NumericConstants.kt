@@ -6,7 +6,7 @@ object NumericConstants {
     const val POLYLINE_WIDTH = 4.0f
     const val DEFAULT_SPEED_KMH = 50
     const val LOCATION_PROVIDING_INTERVAL = 300L
-    const val LINE_INDEX_INTERVAL = 0.005
+    const val LINE_INDEX_INTERVAL = 0.00005
     const val PROVIDER_ACCURACY = 5F
     const val PROVIDER_BEARING_ACCURACY_DEGREES = 0.1f
     const val PROVIDER_VERTICAL_ACCURACY_METERS = 0.1f

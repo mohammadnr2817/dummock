@@ -1,5 +1,7 @@
 package dev.radis.dummock.utils.extension
 
+import android.content.res.Resources
+import android.util.TypedValue
 import android.view.View
 
 fun View.fadeVisible() {
@@ -9,3 +11,10 @@ fun View.fadeVisible() {
 fun View.fadeInVisible() {
     this.animate().alpha(0.0f)
 }
+
+val Number.toPx
+    get() = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        this.toFloat(),
+        Resources.getSystem().displayMetrics
+    )

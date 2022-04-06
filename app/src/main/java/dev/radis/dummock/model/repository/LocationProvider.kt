@@ -32,7 +32,6 @@ import dev.radis.dummock.utils.constants.StringConstants.PROVIDER_GPS
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flow
 import org.locationtech.jts.linearref.LengthIndexedLine
 
 class LocationProvider : Service() {
@@ -43,6 +42,7 @@ class LocationProvider : Service() {
     private var lineIndex: Double = 0.0
     private var speed: Float = 0F
     private lateinit var locationManager: LocationManager
+    private var tickerInterval: Long = 0
 
     private val _locationFlow: MutableStateFlow<Point?> = MutableStateFlow(null)
     val locationFlow: StateFlow<Point?> = _locationFlow
@@ -72,18 +72,16 @@ class LocationProvider : Service() {
         this.speed = speed
 
         timerJob = coroutineScope.launch {
-            flow<Nothing> {
-                while (true) {
-                    val lastLocation = requireNotNull(lengthIndexedLine).extractPoint(lineIndex)
-                    provideNewLocation()
-                    val nextLocation = requireNotNull(lengthIndexedLine).extractPoint(lineIndex)
-                    val distance = LocationUtils.haversine(
-                        Point.fromCoordinate(lastLocation),
-                        Point.fromCoordinate(nextLocation)
-                    )
-                    val interval = (distance / speed) * 60 * 60 * 1000
-                    delay(interval.toLong())
-                }
+            while (true) {
+                val lastLocation = requireNotNull(lengthIndexedLine).extractPoint(lineIndex)
+                provideNewLocation()
+                val nextLocation = requireNotNull(lengthIndexedLine).extractPoint(lineIndex)
+                val distance = LocationUtils.haversine(
+                    Point.fromCoordinate(lastLocation),
+                    Point.fromCoordinate(nextLocation)
+                )
+                tickerInterval = ((distance / speed) * 60 * 60 * 1000).toLong()
+                delay(tickerInterval)
             }
         }
     }
