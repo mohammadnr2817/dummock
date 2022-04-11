@@ -8,7 +8,7 @@
     android:background="@android:color/white"
     app:behavior_hideable="false"
     app:behavior_peekHeight="100dp"
-    app:cardCornerRadius="@dimen/default_corner_radius"
+    style="@style/CustomCardCornerRadius"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <androidx.constraintlayout.widget.ConstraintLayout
