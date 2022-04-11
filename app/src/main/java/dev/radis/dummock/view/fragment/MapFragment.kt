@@ -1,8 +1,12 @@
 package dev.radis.dummock.view.fragment
 
+import android.content.ComponentName
+import android.content.Intent
+import android.content.ServiceConnection
 import android.content.res.ColorStateList
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.os.IBinder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,14 +29,21 @@ import dev.radis.dummock.databinding.FragmentMapBinding
 import dev.radis.dummock.di.map.MapComponentBuilder
 import dev.radis.dummock.model.entity.DirectionModel
 import dev.radis.dummock.model.entity.Point
+import dev.radis.dummock.model.repository.LocationProvider
+import dev.radis.dummock.utils.LocationUtils
 import dev.radis.dummock.utils.SingleUse
 import dev.radis.dummock.utils.constants.DirectionType
 import dev.radis.dummock.utils.constants.NumericConstants.FIRST_LOCATION_INDEX
+import dev.radis.dummock.utils.constants.NumericConstants.MAP_ACTION_TIME
+import dev.radis.dummock.utils.constants.NumericConstants.MAP_ZOOM
+import dev.radis.dummock.utils.constants.NumericConstants.MARKER_SIZE
 import dev.radis.dummock.utils.constants.NumericConstants.POLYLINE_WIDTH
 import dev.radis.dummock.utils.constants.NumericConstants.SECOND_LOCATION_INDEX
 import dev.radis.dummock.utils.constants.StringConstants.DIRECTION_TYPE_BIKE
 import dev.radis.dummock.utils.constants.StringConstants.DIRECTION_TYPE_CAR
+import dev.radis.dummock.utils.extension.rotate
 import dev.radis.dummock.utils.extension.toPersianDigits
+import dev.radis.dummock.utils.extension.toPx
 import dev.radis.dummock.utils.mvi.MviView
 import dev.radis.dummock.view.intent.MapIntent
 import dev.radis.dummock.view.state.MapState
@@ -57,6 +68,33 @@ class MapFragment : Fragment(), MviView<MapState> {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
+    private var isLocationProviderConnected: Boolean = false
+    private var locationProviderService: LocationProvider? = null
+    private var navigationMarker: Marker? = null
+
+    private lateinit var serviceIntent: Intent
+
+    private val locationProviderConnection = object : ServiceConnection {
+        override fun onServiceConnected(componentName: ComponentName?, binder: IBinder?) {
+            isLocationProviderConnected = true
+            locationProviderService =
+                (binder as LocationProvider.LocationProviderBinder).getService()
+            lifecycleScope.launch {
+                locationProviderService?.locationFlow?.collect(this@MapFragment::observeLocations)
+            }
+            locationProviderService?.startProvidingLocations(
+                requireNotNull(viewModel.stateFlow.value.direction?.value).points,
+                viewModel.stateFlow.value.speed.toFloat()
+            )
+        }
+
+        override fun onServiceDisconnected(componentName: ComponentName?) {
+            isLocationProviderConnected = false
+            locationProviderService = null
+        }
+
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -77,6 +115,11 @@ class MapFragment : Fragment(), MviView<MapState> {
                 renderState(state)
             }
         }
+
+        serviceIntent = Intent(activity, LocationProvider::class.java)
+
+        // TODO: Set margin dynamically!
+        binding.mapNeshanMapView.settings.setNeshanLogoMargins(12.toPx.toInt(), 112.toPx.toInt())
 
         routeDetailBottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
@@ -132,6 +175,10 @@ class MapFragment : Fragment(), MviView<MapState> {
             false
         }
 
+        binding.mapViewBottom.btmSheetRouteDetailBtnStartNavPeek.setOnClickListener {
+            startLocationProviderService()
+        }
+
     }
 
     override fun onDestroyView() {
@@ -168,7 +215,7 @@ class MapFragment : Fragment(), MviView<MapState> {
                 Marker(
                     LatLng(requireNotNull(point.lat), requireNotNull(point.lng)),
                     MarkerStyleBuilder().apply {
-                        size = 32.0F
+                        size = MARKER_SIZE
                         bitmap = BitmapUtils.createBitmapFromAndroidBitmap(
                             BitmapFactory.decodeResource(
                                 resources, R.drawable.location
@@ -232,18 +279,21 @@ class MapFragment : Fragment(), MviView<MapState> {
     private fun switchDirectionType(@DirectionType directionType: String) {
         when (directionType) {
             DIRECTION_TYPE_CAR -> {
-                setButtonActiveState(binding.mapViewBottom.btmSheetRouteDetailSettingsTypeCar, true)
-                setButtonActiveState(
+                setTypeButtonActiveState(
+                    binding.mapViewBottom.btmSheetRouteDetailSettingsTypeCar,
+                    true
+                )
+                setTypeButtonActiveState(
                     binding.mapViewBottom.btmSheetRouteDetailSettingsTypeBike,
                     false
                 )
             }
             DIRECTION_TYPE_BIKE -> {
-                setButtonActiveState(
+                setTypeButtonActiveState(
                     binding.mapViewBottom.btmSheetRouteDetailSettingsTypeCar,
                     false
                 )
-                setButtonActiveState(
+                setTypeButtonActiveState(
                     binding.mapViewBottom.btmSheetRouteDetailSettingsTypeBike,
                     true
                 )
@@ -251,15 +301,59 @@ class MapFragment : Fragment(), MviView<MapState> {
         }
     }
 
-    private fun setButtonActiveState(button: MaterialButton, active: Boolean) {
+    private fun setTypeButtonActiveState(button: MaterialButton, active: Boolean) {
         val stateColor = ContextCompat.getColor(
             requireNotNull(context),
-            if (active) R.color.purple_700 else R.color.grey_700
+            if (active) R.color.pink_700 else R.color.grey_700
         )
         button.apply {
             setTextColor(stateColor)
             strokeColor = ColorStateList.valueOf(stateColor)
             iconTint = ColorStateList.valueOf(stateColor)
+        }
+    }
+
+    private fun startLocationProviderService() {
+        activity?.startService(serviceIntent)
+        activity?.bindService(serviceIntent, locationProviderConnection, 0)
+    }
+
+    private fun observeLocations(point: Point?) {
+        point?.let {
+            var bearing: Double? = null
+
+            navigationMarker?.let { navMarker ->
+                bearing = LocationUtils.findBearing(
+                    Point(
+                        navMarker.latLng.latitude,
+                        navMarker.latLng.longitude
+                    ),
+                    it
+                )
+                binding.mapNeshanMapView.removeMarker(navigationMarker)
+            }
+
+            navigationMarker = Marker(
+                LatLng(requireNotNull(it.lat), requireNotNull(it.lng)),
+                MarkerStyleBuilder().apply {
+                    size = MARKER_SIZE
+                    bitmap = BitmapUtils.createBitmapFromAndroidBitmap(
+                        BitmapFactory.decodeResource(
+                            resources, R.drawable.nav_icon
+                        ).rotate(bearing?.toFloat() ?: 0F)
+                    )
+                }.buildStyle()
+            )
+
+            binding.mapNeshanMapView.moveCamera(
+                LatLng(
+                    requireNotNull(it.lat),
+                    requireNotNull(it.lng)
+                ), MAP_ACTION_TIME
+            )
+
+            binding.mapNeshanMapView.setZoom(MAP_ZOOM, MAP_ACTION_TIME)
+            binding.mapNeshanMapView.addMarker(navigationMarker)
         }
     }
 

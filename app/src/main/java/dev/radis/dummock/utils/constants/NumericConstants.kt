@@ -12,4 +12,7 @@ object NumericConstants {
     const val PROVIDER_VERTICAL_ACCURACY_METERS = 0.1f
     const val PROVIDER_SPEED_ACCURACY_METERS_PER_SECOND = 0.01f
     const val FOREGROUND_NOTIFICATION_ID = 2817
+    const val MARKER_SIZE = 32F
+    const val MAP_ZOOM = 18F
+    const val MAP_ACTION_TIME = 0.1F
 }
