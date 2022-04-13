@@ -45,7 +45,14 @@ class MapViewModel @Inject constructor(
                 intent.secondLocationIndex
             )
             is MapIntent.SwitchDirectionTypeIntent -> changeDirectionType(intent.directionRequestType)
-            is MapIntent.CopyToClipboard -> copyToClipboard(intent.value)
+            is MapIntent.CopyToClipboardIntent -> copyToClipboard(intent.value)
+            is MapIntent.ChangeProviderServiceStateIntent -> changeProviderServiceState(intent.value)
+        }
+    }
+
+    private fun changeProviderServiceState(value: Boolean) {
+        viewModelScope.launch {
+            _stateFlow.emit(stateFlow.value.copy(serviceRunning = SingleUse(value)))
         }
     }
 

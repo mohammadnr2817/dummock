@@ -16,6 +16,8 @@ sealed class MapIntent : MviIntent {
     data class SwitchDirectionTypeIntent(@DirectionType val directionRequestType: String) :
         MapIntent()
 
-    data class CopyToClipboard(val value: String) : MapIntent()
+    data class CopyToClipboardIntent(val value: String) : MapIntent()
+
+    data class ChangeProviderServiceStateIntent(val value: Boolean) : MapIntent()
 
 }

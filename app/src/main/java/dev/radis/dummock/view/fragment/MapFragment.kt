@@ -50,6 +50,7 @@ import dev.radis.dummock.view.state.MapState
 import dev.radis.dummock.viewmodel.MapViewModel
 import dev.radis.dummock.viewmodel.ViewModelFactory
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.neshan.common.model.LatLng
@@ -68,7 +69,7 @@ class MapFragment : Fragment(), MviView<MapState> {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
-    private var isLocationProviderConnected: Boolean = false
+    private var isLocationProviderServiceConnected: Boolean = false
     private var locationProviderService: LocationProvider? = null
     private var navigationMarker: Marker? = null
 
@@ -76,7 +77,7 @@ class MapFragment : Fragment(), MviView<MapState> {
 
     private val locationProviderConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName?, binder: IBinder?) {
-            isLocationProviderConnected = true
+            isLocationProviderServiceConnected = true
             locationProviderService =
                 (binder as LocationProvider.LocationProviderBinder).getService()
             lifecycleScope.launch {
@@ -86,11 +87,13 @@ class MapFragment : Fragment(), MviView<MapState> {
                 requireNotNull(viewModel.stateFlow.value.direction?.value).points,
                 viewModel.stateFlow.value.speed.toFloat()
             )
+            viewModel.handleIntent(MapIntent.ChangeProviderServiceStateIntent(true))
         }
 
         override fun onServiceDisconnected(componentName: ComponentName?) {
-            isLocationProviderConnected = false
+            isLocationProviderServiceConnected = false
             locationProviderService = null
+            viewModel.handleIntent(MapIntent.ChangeProviderServiceStateIntent(false))
         }
 
     }
@@ -163,20 +166,24 @@ class MapFragment : Fragment(), MviView<MapState> {
 
         binding.mapBtnOrigin.setOnLongClickListener {
             viewModel.handleIntent(
-                MapIntent.CopyToClipboard(binding.mapBtnOrigin.text.toString())
+                MapIntent.CopyToClipboardIntent(binding.mapBtnOrigin.text.toString())
             )
             false
         }
 
         binding.mapBtnDestination.setOnLongClickListener {
             viewModel.handleIntent(
-                MapIntent.CopyToClipboard(binding.mapBtnDestination.text.toString())
+                MapIntent.CopyToClipboardIntent(binding.mapBtnDestination.text.toString())
             )
             false
         }
 
         binding.mapViewBottom.btmSheetRouteDetailBtnStartNavPeek.setOnClickListener {
-            startLocationProviderService()
+            setLocationProviderState()
+        }
+
+        binding.mapViewBottom.btmSheetRouteDetailBtnStartNav.setOnClickListener {
+            setLocationProviderState()
         }
 
     }
@@ -194,6 +201,8 @@ class MapFragment : Fragment(), MviView<MapState> {
         addMarkerState(state.markers)
         addRouteDetailsState(state.direction)
         switchDirectionType(state.directionRequestType)
+        renderProviderServiceState(state.serviceRunning)
+        setRouteDetailsState()
     }
 
     private fun loadingState(isLoading: Boolean) {
@@ -279,21 +288,21 @@ class MapFragment : Fragment(), MviView<MapState> {
     private fun switchDirectionType(@DirectionType directionType: String) {
         when (directionType) {
             DIRECTION_TYPE_CAR -> {
-                setTypeButtonActiveState(
+                setDirectionButtonState(
                     binding.mapViewBottom.btmSheetRouteDetailSettingsTypeCar,
                     true
                 )
-                setTypeButtonActiveState(
+                setDirectionButtonState(
                     binding.mapViewBottom.btmSheetRouteDetailSettingsTypeBike,
                     false
                 )
             }
             DIRECTION_TYPE_BIKE -> {
-                setTypeButtonActiveState(
+                setDirectionButtonState(
                     binding.mapViewBottom.btmSheetRouteDetailSettingsTypeCar,
                     false
                 )
-                setTypeButtonActiveState(
+                setDirectionButtonState(
                     binding.mapViewBottom.btmSheetRouteDetailSettingsTypeBike,
                     true
                 )
@@ -301,7 +310,7 @@ class MapFragment : Fragment(), MviView<MapState> {
         }
     }
 
-    private fun setTypeButtonActiveState(button: MaterialButton, active: Boolean) {
+    private fun setDirectionButtonState(button: MaterialButton, active: Boolean) {
         val stateColor = ContextCompat.getColor(
             requireNotNull(context),
             if (active) R.color.pink_700 else R.color.grey_700
@@ -313,9 +322,54 @@ class MapFragment : Fragment(), MviView<MapState> {
         }
     }
 
+    private fun renderProviderServiceState(serviceRunning: SingleUse<Boolean>?) {
+        serviceRunning?.ifNotUsedBefore()?.let {
+            val stateColor = ContextCompat.getColor(
+                requireNotNull(context),
+                if (it) R.color.red_700 else R.color.pink_700
+            )
+            val stateText = if (it) "پایان" else "شروع"
+            binding.mapViewBottom.btmSheetRouteDetailBtnStartNavPeek.apply {
+                text = stateText
+                setBackgroundColor(stateColor)
+            }
+            binding.mapViewBottom.btmSheetRouteDetailBtnStartNav.apply {
+                text = stateText
+                setBackgroundColor(stateColor)
+            }
+        }
+    }
+
+    private fun setRouteDetailsState() {
+        if (isLocationProviderServiceConnected)
+            routeDetailBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        lifecycleScope.launch {
+            delay(500)
+            binding.mapViewBottom.btmSheetRouteDetailGpSettings.isVisible =
+                !isLocationProviderServiceConnected
+        }
+        if (!isLocationProviderServiceConnected) {
+            navigationMarker?.let {
+                binding.mapNeshanMapView.removeMarker(navigationMarker)
+            }
+            navigationMarker = null
+        }
+    }
+
+    private fun setLocationProviderState() {
+        if (isLocationProviderServiceConnected)
+            stopLocationProviderService()
+        else
+            startLocationProviderService()
+    }
+
     private fun startLocationProviderService() {
         activity?.startService(serviceIntent)
         activity?.bindService(serviceIntent, locationProviderConnection, 0)
+    }
+
+    private fun stopLocationProviderService() {
+        activity?.stopService(serviceIntent)
     }
 
     private fun observeLocations(point: Point?) {
