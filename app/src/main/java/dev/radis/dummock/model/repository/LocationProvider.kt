@@ -82,6 +82,8 @@ class LocationProvider : Service() {
                 )
                 tickerInterval = ((distance / speed) * 60 * 60 * 1000).toLong()
                 delay(tickerInterval)
+                if (lineIndex == lengthIndexedLine?.endIndex)
+                    stopSelf()
             }
         }
     }
