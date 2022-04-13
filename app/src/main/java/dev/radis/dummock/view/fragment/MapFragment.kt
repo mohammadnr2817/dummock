@@ -119,6 +119,9 @@ class MapFragment : Fragment(), MviView<MapState> {
             }
         }
 
+        binding.mapNeshanMapView.isTrafficEnabled = true
+        binding.mapNeshanMapView.isPoiEnabled = true
+
         serviceIntent = Intent(activity, LocationProvider::class.java)
 
         // TODO: Set margin dynamically!
