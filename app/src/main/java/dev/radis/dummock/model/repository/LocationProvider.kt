@@ -1,10 +1,7 @@
 package dev.radis.dummock.model.repository
 
 import android.annotation.SuppressLint
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.Service
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.location.Criteria
@@ -25,6 +22,7 @@ import dev.radis.dummock.utils.constants.NumericConstants.PROVIDER_ACCURACY
 import dev.radis.dummock.utils.constants.NumericConstants.PROVIDER_BEARING_ACCURACY_DEGREES
 import dev.radis.dummock.utils.constants.NumericConstants.PROVIDER_SPEED_ACCURACY_METERS_PER_SECOND
 import dev.radis.dummock.utils.constants.NumericConstants.PROVIDER_VERTICAL_ACCURACY_METERS
+import dev.radis.dummock.utils.constants.StringConstants.FOREGROUND_NOTIFICATION_ACTION_STOP
 import dev.radis.dummock.utils.constants.StringConstants.FOREGROUND_NOTIFICATION_CHANNEL_ID
 import dev.radis.dummock.utils.constants.StringConstants.FOREGROUND_NOTIFICATION_CHANNEL_NAME
 import dev.radis.dummock.utils.constants.StringConstants.FOREGROUND_NOTIFICATION_CONTENT_TITLE
@@ -47,12 +45,15 @@ class LocationProvider : Service() {
     private val _locationFlow: MutableStateFlow<Point?> = MutableStateFlow(null)
     val locationFlow: StateFlow<Point?> = _locationFlow
 
-    inner class LocationProviderBinder() : Binder() {
+    inner class LocationProviderBinder : Binder() {
         fun getService(): LocationProvider = this@LocationProvider
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        showNotification()
+        if (intent?.action == FOREGROUND_NOTIFICATION_ACTION_STOP)
+            stopSelf()
+        else
+            showNotification()
         return START_NOT_STICKY
     }
 
@@ -102,10 +103,6 @@ class LocationProvider : Service() {
     private fun cancelLastProvide() {
         timerJob?.cancel()
         lineIndex = 0.0
-    }
-
-    fun stopProvidingLocations() {
-        timerJob?.cancel()
     }
 
     @SuppressLint("WrongConstant")
@@ -178,6 +175,22 @@ class LocationProvider : Service() {
             )
     }
 
+    @SuppressLint("UnspecifiedImmutableFlag")
+    private fun createStopServiceAction(): NotificationCompat.Action {
+        val stopSelfIntent = Intent(this, LocationProvider::class.java).apply {
+            action = FOREGROUND_NOTIFICATION_ACTION_STOP
+        }
+        val stopSelfPendingIntent =
+            PendingIntent.getService(this, 0, stopSelfIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+
+        return NotificationCompat.Action(
+            R.drawable.nav_icon,
+            FOREGROUND_NOTIFICATION_ACTION_STOP,
+            stopSelfPendingIntent
+        )
+
+    }
+
     private fun createNotification(): Notification {
         createNotificationChannel()
         return NotificationCompat.Builder(this, FOREGROUND_NOTIFICATION_CHANNEL_ID)
@@ -186,6 +199,7 @@ class LocationProvider : Service() {
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setOngoing(true)
             .setSilent(true)
+            .addAction(createStopServiceAction())
             .build()
     }
 

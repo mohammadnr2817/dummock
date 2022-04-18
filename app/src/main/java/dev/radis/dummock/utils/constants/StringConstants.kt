@@ -15,6 +15,7 @@ object StringConstants {
     const val FOREGROUND_NOTIFICATION_CHANNEL_ID = "LocationServiceId"
     const val FOREGROUND_NOTIFICATION_CHANNEL_NAME = "Location Service"
     const val FOREGROUND_NOTIFICATION_CONTENT_TITLE = "Dummock is mocking locations!"
+    const val FOREGROUND_NOTIFICATION_ACTION_STOP = "Stop"
 }
 
 @StringDef(DIRECTION_TYPE_CAR, DIRECTION_TYPE_BIKE)
