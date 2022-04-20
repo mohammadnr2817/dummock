@@ -10,10 +10,12 @@ import android.view.animation.BounceInterpolator
 
 fun View.fadeVisible() {
     this.animate().alpha(1.0f)
+    this.isEnabled = true
 }
 
 fun View.fadeInVisible() {
     this.animate().alpha(0.0f)
+    this.isEnabled = false
 }
 
 fun View.bounceAnimation(duration: Long) {
