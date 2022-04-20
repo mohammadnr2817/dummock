@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/btmSheetRouteDetailRoot"
+    style="@style/CustomCardCornerRadius"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
     app:behavior_hideable="false"
     app:behavior_peekHeight="100dp"
-    style="@style/CustomCardCornerRadius"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -194,16 +194,29 @@
                 </HorizontalScrollView>
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btmSheetRouteDetailBtnSave"
+                    style="@style/DButton.Outline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/default_margin"
+                    android:text="@string/txt_save"
+                    app:icon="@drawable/ic_baseline_bookmark_border_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/btmSheetRouteDetailViewRouteSettings" />
+
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btmSheetRouteDetailBtnStartNav"
                     style="@style/DButton.Primary.Active"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/small_margin"
                     android:layout_marginTop="@dimen/default_margin"
                     android:text="@string/txt_start"
                     app:icon="@drawable/ic_baseline_navigation_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/btmSheetRouteDetailBtnSave"
                     app:layout_constraintTop_toBottomOf="@id/btmSheetRouteDetailViewRouteSettings" />
 
 
