@@ -190,6 +190,10 @@ class MapFragment : Fragment(), MviView<MapState> {
             setLocationProviderState()
         }
 
+        binding.mapBtnNavigateInAnotherApp.setOnClickListener {
+            viewModel.handleIntent(MapIntent.NavigateInAnotherAppIntent)
+        }
+
     }
 
     override fun onDestroyView() {
@@ -208,6 +212,7 @@ class MapFragment : Fragment(), MviView<MapState> {
         renderProviderServiceState(state.serviceRunning)
         chooseLocationState()
         setRouteDetailsState()
+        executeIntentState(state.executeIntent)
     }
 
     private fun loadingState(isLoading: Boolean) {
@@ -221,6 +226,12 @@ class MapFragment : Fragment(), MviView<MapState> {
 
     private fun messageState(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun executeIntentState(intent: SingleUse<Intent>?) {
+        intent?.let {
+            startActivity(intent.value)
+        }
     }
 
     private fun addMarkerState(markers: SingleUse<List<Point>>?) {
@@ -346,7 +357,6 @@ class MapFragment : Fragment(), MviView<MapState> {
                 if (it) R.color.red_700 else R.color.pink_700
             )
             val stateText = if (it) "پایان" else "شروع"
-            //if (it) binding.mapGpRouteIntents.fadeInVisible() else binding.mapGpRouteIntents.fadeVisible()
             binding.mapGpRouteIntents.isVisible = !it
             binding.mapViewBottom.btmSheetRouteDetailBtnStartNavPeek.apply {
                 text = stateText

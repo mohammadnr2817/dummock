@@ -20,4 +20,6 @@ sealed class MapIntent : MviIntent {
 
     data class ChangeProviderServiceStateIntent(val value: Boolean) : MapIntent()
 
+    object NavigateInAnotherAppIntent : MapIntent()
+
 }

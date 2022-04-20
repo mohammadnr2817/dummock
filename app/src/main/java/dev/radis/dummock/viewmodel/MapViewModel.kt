@@ -3,6 +3,8 @@ package dev.radis.dummock.viewmodel
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.radis.dummock.model.entity.DirectionModel
@@ -20,6 +22,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
+
 
 class MapViewModel @Inject constructor(
     private val directionRepository: DirectionRepository,
@@ -47,6 +50,21 @@ class MapViewModel @Inject constructor(
             is MapIntent.SwitchDirectionTypeIntent -> changeDirectionType(intent.directionRequestType)
             is MapIntent.CopyToClipboardIntent -> copyToClipboard(intent.value)
             is MapIntent.ChangeProviderServiceStateIntent -> changeProviderServiceState(intent.value)
+            MapIntent.NavigateInAnotherAppIntent -> navigateInAnotherApp()
+        }
+    }
+
+    private fun navigateInAnotherApp() {
+        viewModelScope.launch {
+            val origin = stateFlow.value.markers.value.first()
+            val destination = stateFlow.value.markers.value.last()
+            val uri = ("geo:" + origin.lat.toString() + "," + origin.lng.toString() +
+                    "?q=" + destination.lat.toString() + "," + destination.lng)
+            val navigationIntent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+
+            _stateFlow.emit(
+                stateFlow.value.copy(executeIntent = SingleUse(navigationIntent))
+            )
         }
     }
 
