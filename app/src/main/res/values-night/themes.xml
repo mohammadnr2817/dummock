@@ -30,6 +30,13 @@
         <item name="android:padding">@dimen/default_margin</item>
     </style>
 
+    <style name="DButton.Text" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="cornerRadius">@dimen/default_corner_radius</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconSize">16dp</item>
+        <item name="android:padding">@dimen/default_margin</item>
+    </style>
+
     <style name="DButton.Primary.Active" parent="DButton">
         <item name="backgroundColor">?attr/colorPrimaryVariant</item>
         <item name="android:textColor">@android:color/white</item>

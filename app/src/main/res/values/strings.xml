@@ -17,4 +17,6 @@
     <string name="txt_change_origin_destination">جابجایی مبدا و مقصد</string>
     <string name="txt_choose_origin">انتخاب مبدا</string>
     <string name="txt_choose_destination">انتخاب مقصد</string>
+    <string name="txt_share_route">اشتراک گذاری</string>
+    <string name="txt_navigate_route_intent">مسیریاب های دیگر</string>
 </resources>

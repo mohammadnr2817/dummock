@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                app:constraint_referenced_ids="mapImgSwitchRoutes,mapViewRoutes" />
+                app:constraint_referenced_ids="mapImgSwitchRoutes,mapViewRoutes,mapGpRouteIntents" />
 
             <ImageView
                 android:id="@+id/mapImgSwitchRoutes"
@@ -58,6 +58,7 @@
                 android:id="@+id/mapViewRoutes"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/mapImgSwitchRoutes"
@@ -68,7 +69,6 @@
                     style="@style/DButton.Outline.InActive"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_margin"
                     android:gravity="end"
                     app:icon="@drawable/ic_baseline_navigation_24"
                     app:iconGravity="end"
@@ -79,11 +79,46 @@
                     style="@style/DButton.Outline.InActive"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_margin"
                     android:gravity="end"
                     app:icon="@drawable/ic_baseline_place_24"
                     app:iconGravity="end"
                     tools:text="آدرس مقصد مورد نظر" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/mapGpRouteIntents"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:orientation="horizontal"
+                app:layout_constraintLeft_toLeftOf="@id/mapViewRoutes"
+                app:layout_constraintRight_toRightOf="@id/mapViewRoutes"
+                app:layout_constraintTop_toBottomOf="@id/mapViewRoutes">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/mapBtnShareRoute"
+                    style="@style/DButton.Text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/txt_share_route"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp"
+                    app:icon="@drawable/ic_baseline_share_24"
+                    app:iconTint="@android:color/black" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/mapBtnNavigateInAnotherApp"
+                    style="@style/DButton.Text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/txt_navigate_route_intent"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp"
+                    app:icon="@drawable/ic_baseline_send_24"
+                    app:iconTint="@android:color/black" />
 
             </LinearLayout>
 

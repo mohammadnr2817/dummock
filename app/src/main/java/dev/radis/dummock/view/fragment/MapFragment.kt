@@ -346,6 +346,8 @@ class MapFragment : Fragment(), MviView<MapState> {
                 if (it) R.color.red_700 else R.color.pink_700
             )
             val stateText = if (it) "پایان" else "شروع"
+            //if (it) binding.mapGpRouteIntents.fadeInVisible() else binding.mapGpRouteIntents.fadeVisible()
+            binding.mapGpRouteIntents.isVisible = !it
             binding.mapViewBottom.btmSheetRouteDetailBtnStartNavPeek.apply {
                 text = stateText
                 setBackgroundColor(stateColor)
