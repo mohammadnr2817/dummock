@@ -2,7 +2,7 @@
     <string name="app_name">Dummock</string>
     <string name="txt_home_mock_archive">Mock Archive</string>
     <string name="txt_home_new_mock">New Mock</string>
-    <string name="txt_map_help">برای شروع مسیریابی، روی نقشه نگه دارید</string>
+    <string name="txt_map_help">برای شروع مسیریابی، مبدا و مقصد را انتخاب کنید</string>
     <string name="txt_start">شروع</string>
     <string name="txt_kilometer">کیلومتر</string>
     <string name="txt_minute">دقیقه</string>
@@ -14,4 +14,6 @@
     <string name="txt_route_settings">تنظیمات مسیر</string>
     <string name="txt_route_info">اطلاعات مسیر</string>
     <string name="txt_change_origin_destination">جابجایی مبدا و مقصد</string>
+    <string name="txt_choose_origin">انتخاب مبدا</string>
+    <string name="txt_choose_destination">انتخاب مقصد</string>
 </resources>

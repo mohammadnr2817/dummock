@@ -96,6 +96,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <ImageView
+        android:id="@+id/mapChooseLocationMarker"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="32dp"
+        android:src="@drawable/ic_baseline_place_24"
+        app:tint="@color/blue_berry"
+        tools:ignore="ContentDescription" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/mapBtnChooseLocation"
+        style="@style/DButton.Primary.Active"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_margin="12dp"
+        android:layout_marginTop="@dimen/default_margin"
+        android:text="@string/txt_choose_origin" />
+
     <include
         android:id="@+id/mapViewBottom"
         layout="@layout/btm_sheet_route_detail"

@@ -41,9 +41,7 @@ import dev.radis.dummock.utils.constants.NumericConstants.POLYLINE_WIDTH
 import dev.radis.dummock.utils.constants.NumericConstants.SECOND_LOCATION_INDEX
 import dev.radis.dummock.utils.constants.StringConstants.DIRECTION_TYPE_BIKE
 import dev.radis.dummock.utils.constants.StringConstants.DIRECTION_TYPE_CAR
-import dev.radis.dummock.utils.extension.rotate
-import dev.radis.dummock.utils.extension.toPersianDigits
-import dev.radis.dummock.utils.extension.toPx
+import dev.radis.dummock.utils.extension.*
 import dev.radis.dummock.utils.mvi.MviView
 import dev.radis.dummock.view.intent.MapIntent
 import dev.radis.dummock.view.state.MapState
@@ -139,12 +137,16 @@ class MapFragment : Fragment(), MviView<MapState> {
             }
         })
 
-        binding.mapNeshanMapView.setOnMapLongClickListener {
+        binding.mapBtnChooseLocation.setOnClickListener {
             viewModel.handleIntent(
                 MapIntent.LocationSelectedIntent(
-                    Point(it.latitude, it.longitude)
+                    Point(
+                        binding.mapNeshanMapView.cameraTargetPosition.latitude,
+                        binding.mapNeshanMapView.cameraTargetPosition.longitude
+                    )
                 )
             )
+            binding.mapChooseLocationMarker.bounceAnimation(800)
         }
 
         binding.mapImgSwitchRoutes.setOnClickListener {
@@ -205,6 +207,7 @@ class MapFragment : Fragment(), MviView<MapState> {
         addRouteDetailsState(state.direction)
         switchDirectionType(state.directionRequestType)
         renderProviderServiceState(state.serviceRunning)
+        chooseLocationState()
         setRouteDetailsState()
     }
 
@@ -239,9 +242,24 @@ class MapFragment : Fragment(), MviView<MapState> {
         }
     }
 
+    private fun chooseLocationState() {
+        viewModel.stateFlow.value.markers.value.also {
+            binding.mapBtnChooseLocation.text =
+                getString(if (it.isEmpty()) R.string.txt_choose_origin else R.string.txt_choose_destination)
+            if (it.size < 2) {
+                binding.mapChooseLocationMarker.fadeVisible()
+                binding.mapBtnChooseLocation.fadeVisible()
+            } else {
+                binding.mapBtnChooseLocation.fadeInVisible()
+                binding.mapChooseLocationMarker.fadeInVisible()
+            }
+        }
+    }
+
     private fun addRouteDetailsState(details: SingleUse<DirectionModel>?) {
         details?.let {
             it.ifNotUsedBefore()?.let { model ->
+
                 changeRouteDetailsTexts(model)
 
                 removePreviousPolyline()
