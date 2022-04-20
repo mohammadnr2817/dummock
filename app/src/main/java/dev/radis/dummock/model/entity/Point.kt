@@ -1,11 +1,16 @@
 package dev.radis.dummock.model.entity
 
 import org.locationtech.jts.geom.Coordinate
+import org.neshan.common.model.LatLng
 
 data class Point(val lat: Double, val lng: Double) {
 
     fun toRequestString(): String {
         return "$lat,$lng"
+    }
+
+    fun toLatLng(): LatLng {
+        return LatLng(lat, lng)
     }
 
     override fun toString(): String {

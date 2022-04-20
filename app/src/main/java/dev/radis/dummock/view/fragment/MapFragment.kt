@@ -51,7 +51,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import org.neshan.common.model.LatLng
 import org.neshan.mapsdk.model.Marker
 import org.neshan.mapsdk.model.Polyline
 import javax.inject.Inject
@@ -228,7 +227,7 @@ class MapFragment : Fragment(), MviView<MapState> {
         markers?.ifNotUsedBefore()?.forEach { point ->
             binding.mapNeshanMapView.addMarker(
                 Marker(
-                    LatLng(requireNotNull(point.lat), requireNotNull(point.lng)),
+                    point.toLatLng(),
                     MarkerStyleBuilder().apply {
                         size = MARKER_SIZE
                         bitmap = BitmapUtils.createBitmapFromAndroidBitmap(
@@ -266,10 +265,7 @@ class MapFragment : Fragment(), MviView<MapState> {
 
                 currentDirectionPolyline = Polyline(
                     ArrayList(model.points.map { point ->
-                        LatLng(
-                            requireNotNull(point.lat),
-                            requireNotNull(point.lng)
-                        )
+                        point.toLatLng()
                     }),
                     createPolylineStyle()
                 )
@@ -379,18 +375,21 @@ class MapFragment : Fragment(), MviView<MapState> {
 
     private fun setLocationProviderState() {
         if (isLocationProviderServiceConnected)
-            stopLocationProviderService()
+            stopProvidingLocation()
         else
-            startLocationProviderService()
+            startProvidingLocation()
     }
 
-    private fun startLocationProviderService() {
+    private fun startProvidingLocation() {
         activity?.startService(serviceIntent)
         activity?.bindService(serviceIntent, locationProviderConnection, 0)
     }
 
-    private fun stopLocationProviderService() {
+    private fun stopProvidingLocation() {
         activity?.stopService(serviceIntent)
+        binding.mapNeshanMapView.moveCamera(
+            viewModel.stateFlow.value.markers.value.firstOrNull()?.toLatLng(), MAP_ACTION_TIME
+        )
     }
 
     private fun observeLocations(point: Point?) {
@@ -409,7 +408,7 @@ class MapFragment : Fragment(), MviView<MapState> {
             }
 
             navigationMarker = Marker(
-                LatLng(requireNotNull(it.lat), requireNotNull(it.lng)),
+                it.toLatLng(),
                 MarkerStyleBuilder().apply {
                     size = MARKER_SIZE
                     bitmap = BitmapUtils.createBitmapFromAndroidBitmap(
@@ -421,10 +420,7 @@ class MapFragment : Fragment(), MviView<MapState> {
             )
 
             binding.mapNeshanMapView.moveCamera(
-                LatLng(
-                    requireNotNull(it.lat),
-                    requireNotNull(it.lng)
-                ), MAP_ACTION_TIME
+                it.toLatLng(), MAP_ACTION_TIME
             )
 
             binding.mapNeshanMapView.setZoom(MAP_ZOOM, MAP_ACTION_TIME)
