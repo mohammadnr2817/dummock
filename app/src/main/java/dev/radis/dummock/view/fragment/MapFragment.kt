@@ -360,16 +360,16 @@ class MapFragment : Fragment(), MviView<MapState> {
     private fun setRouteDetailsState() {
         if (isLocationProviderServiceConnected)
             routeDetailBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        lifecycleScope.launch {
-            delay(500)
-            binding.mapViewBottom.btmSheetRouteDetailGpSettings.isVisible =
-                !isLocationProviderServiceConnected
-        }
-        if (!isLocationProviderServiceConnected) {
+        else {
             navigationMarker?.let {
                 binding.mapNeshanMapView.removeMarker(navigationMarker)
             }
             navigationMarker = null
+        }
+        lifecycleScope.launch {
+            delay(500)
+            binding.mapViewBottom.btmSheetRouteDetailGpSettings.isVisible =
+                !isLocationProviderServiceConnected
         }
     }
 
