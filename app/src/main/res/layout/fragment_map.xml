@@ -52,7 +52,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/mapViewRoutes"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/mapViewRoutes"
-                app:tint="@android:color/darker_gray" />
+                app:tint="@color/grey_700" />
 
             <LinearLayout
                 android:id="@+id/mapViewRoutes"

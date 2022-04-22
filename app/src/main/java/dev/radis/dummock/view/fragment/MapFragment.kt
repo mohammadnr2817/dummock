@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -69,6 +70,7 @@ class MapFragment : Fragment(), MviView<MapState> {
     private var isLocationProviderServiceConnected: Boolean = false
     private var locationProviderService: LocationProvider? = null
     private var navigationMarker: Marker? = null
+    private var markersList: MutableList<Marker> = mutableListOf()
 
     private lateinit var serviceIntent: Intent
 
@@ -102,6 +104,26 @@ class MapFragment : Fragment(), MviView<MapState> {
         MapComponentBuilder.getComponent().inject(this)
         _binding = FragmentMapBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (!canHandleBackPressed()) {
+                    isEnabled = false
+                    activity?.onBackPressed()
+                }
+            }
+        })
+    }
+
+    private fun canHandleBackPressed(): Boolean {
+        if (viewModel.stateFlow.value.markers.value.isNotEmpty()) {
+            viewModel.handleIntent(MapIntent.RemoveLastLocationIntent)
+            return true
+        }
+        return false
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -205,9 +227,11 @@ class MapFragment : Fragment(), MviView<MapState> {
         state.isLoading?.let {
             loadingState(it.value)
         }
-        if (state.message != null) messageState(state.message.value)
-        addMarkerState(state.markers)
-        addRouteDetailsState(state.direction)
+        state.message?.let {
+            messageState(state.message.value)
+        }
+        renderMarkerState(state.markers)
+        renderRouteDetailsState(state.direction)
         switchDirectionType(state.directionRequestType)
         renderProviderServiceState(state.serviceRunning)
         chooseLocationState()
@@ -234,10 +258,20 @@ class MapFragment : Fragment(), MviView<MapState> {
         }
     }
 
-    private fun addMarkerState(markers: SingleUse<List<Point>>?) {
-        markers?.ifNotUsedBefore()?.forEach { point ->
-            binding.mapNeshanMapView.addMarker(
-                Marker(
+    private fun renderMarkerState(markers: SingleUse<List<Point>>?) {
+        markers?.ifNotUsedBefore()?.let { points ->
+            val markersToRemove: MutableList<Marker> = mutableListOf()
+            markersList.forEach { marker ->
+                if (!points.contains(Point(marker.latLng.latitude, marker.latLng.longitude)))
+                    markersToRemove.add(marker)
+            }
+            markersToRemove.forEach { marker ->
+                binding.mapNeshanMapView.removeMarker(marker)
+                markersList.remove(marker)
+            }
+
+            points.forEach { point ->
+                val marker = Marker(
                     point.toLatLng(),
                     MarkerStyleBuilder().apply {
                         size = MARKER_SIZE
@@ -248,7 +282,11 @@ class MapFragment : Fragment(), MviView<MapState> {
                         )
                     }.buildStyle()
                 )
-            )
+                binding.mapNeshanMapView.addMarker(
+                    marker
+                )
+                markersList.add(marker)
+            }
         }
     }
 
@@ -257,6 +295,7 @@ class MapFragment : Fragment(), MviView<MapState> {
             binding.mapBtnChooseLocation.text =
                 getString(if (it.isEmpty()) R.string.txt_choose_origin else R.string.txt_choose_destination)
             if (it.size < 2) {
+                removePreviousPolyline()
                 binding.mapChooseLocationMarker.fadeVisible()
                 binding.mapBtnChooseLocation.fadeVisible()
             } else {
@@ -266,7 +305,7 @@ class MapFragment : Fragment(), MviView<MapState> {
         }
     }
 
-    private fun addRouteDetailsState(details: SingleUse<DirectionModel>?) {
+    private fun renderRouteDetailsState(details: SingleUse<DirectionModel>?) {
         details?.let {
             it.ifNotUsedBefore()?.let { model ->
 
@@ -282,6 +321,14 @@ class MapFragment : Fragment(), MviView<MapState> {
                 )
 
                 binding.mapNeshanMapView.addPolyline(currentDirectionPolyline)
+            }
+        } ?: run {
+            viewModel.stateFlow.value.markers.value.size.also {
+                if (it < 2) {
+                    binding.mapViewBottom.btmSheetRouteDetailRoot.isVisible = false
+                    binding.mapViewTopViews.isVisible = false
+                    binding.mapTxtHelper.isVisible = true
+                }
             }
         }
     }

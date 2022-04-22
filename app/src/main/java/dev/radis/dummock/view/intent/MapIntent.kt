@@ -8,6 +8,8 @@ sealed class MapIntent : MviIntent {
 
     data class LocationSelectedIntent(val point: Point) : MapIntent()
 
+    object RemoveLastLocationIntent : MapIntent()
+
     data class LocationSwitchIntent(
         var firstLocationIndex: Int,
         var secondLocationIndex: Int

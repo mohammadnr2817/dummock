@@ -51,15 +51,25 @@ class MapViewModel @Inject constructor(
             is MapIntent.CopyToClipboardIntent -> copyToClipboard(intent.value)
             is MapIntent.ChangeProviderServiceStateIntent -> changeProviderServiceState(intent.value)
             MapIntent.NavigateInAnotherAppIntent -> navigateInAnotherApp()
+            MapIntent.RemoveLastLocationIntent -> removeLocationFromLastLocation()
+        }
+    }
+
+    private fun removeLocationFromLastLocation() {
+        viewModelScope.launch {
+            _stateFlow.emit(
+                stateFlow.value.copy(
+                    markers = SingleUse(
+                        stateFlow.value.markers.value.toMutableList().apply { removeLastOrNull() })
+                )
+            )
         }
     }
 
     private fun navigateInAnotherApp() {
         viewModelScope.launch {
-            val origin = stateFlow.value.markers.value.first()
             val destination = stateFlow.value.markers.value.last()
-            val uri = ("geo:" + origin.lat.toString() + "," + origin.lng.toString() +
-                    "?q=" + destination.lat.toString() + "," + destination.lng)
+            val uri = ("geo:" + destination.lat.toString() + "," + destination.lng.toString())
             val navigationIntent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
 
             _stateFlow.emit(
