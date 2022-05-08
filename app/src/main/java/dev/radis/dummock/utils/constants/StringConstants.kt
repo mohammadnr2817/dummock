@@ -6,7 +6,9 @@ import dev.radis.dummock.utils.constants.StringConstants.DIRECTION_TYPE_CAR
 
 object StringConstants {
     const val BASE_DIRECTION_URL = "https://api.neshan.org/"
+    const val APP_NAME = "DUMMOCK"
     const val DUMMOCK_TAG = "DUMMOCK_TAG"
+    const val DUMMOCK_EXTENSION = "dmmc"
     const val DIRECTION_TYPE_CAR = "car"
     const val DIRECTION_TYPE_BIKE = "motorcycle"
     const val PERSIAN_DIGITS = "۰۱۲۳۴۵۶۷۸۹"
