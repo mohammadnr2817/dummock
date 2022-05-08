@@ -216,6 +216,10 @@ class MapFragment : Fragment(), MviView<MapState> {
             viewModel.handleIntent(MapIntent.NavigateInAnotherAppIntent)
         }
 
+        binding.mapBtnShareRoute.setOnClickListener {
+            viewModel.handleIntent(MapIntent.ShareRouteIntent)
+        }
+
     }
 
     override fun onDestroyView() {
@@ -252,9 +256,15 @@ class MapFragment : Fragment(), MviView<MapState> {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
-    private fun executeIntentState(intent: SingleUse<Intent>?) {
-        intent?.let {
-            startActivity(intent.value)
+    private fun executeIntentState(
+        action: SingleUse<Pair<Intent, Boolean>>?
+    ) {
+        action?.let {
+            if (it.value.second) {
+                startActivity(Intent.createChooser(it.value.first, null))
+            } else {
+                startActivity(it.value.first)
+            }
         }
     }
 

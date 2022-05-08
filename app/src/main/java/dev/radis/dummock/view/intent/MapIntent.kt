@@ -24,4 +24,6 @@ sealed class MapIntent : MviIntent {
 
     object NavigateInAnotherAppIntent : MapIntent()
 
+    object ShareRouteIntent : MapIntent()
+
 }

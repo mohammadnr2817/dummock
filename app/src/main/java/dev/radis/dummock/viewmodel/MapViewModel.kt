@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.radis.dummock.model.entity.DirectionModel
 import dev.radis.dummock.model.entity.Point
+import dev.radis.dummock.model.repository.DirectionFileWriterRepository
 import dev.radis.dummock.model.repository.DirectionRepository
 import dev.radis.dummock.utils.SingleUse
 import dev.radis.dummock.utils.constants.DirectionType
@@ -26,6 +27,7 @@ import javax.inject.Inject
 
 class MapViewModel @Inject constructor(
     private val directionRepository: DirectionRepository,
+    private val directionFileWriterRepository: DirectionFileWriterRepository,
     context: Context
 ) : ViewModel(), MviModel<MapIntent, MapState> {
 
@@ -52,6 +54,34 @@ class MapViewModel @Inject constructor(
             is MapIntent.ChangeProviderServiceStateIntent -> changeProviderServiceState(intent.value)
             MapIntent.NavigateInAnotherAppIntent -> navigateInAnotherApp()
             MapIntent.RemoveLastLocationIntent -> removeLocationFromLastLocation()
+            MapIntent.ShareRouteIntent -> shareRoute()
+        }
+    }
+
+    private fun shareRoute() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response =
+                directionFileWriterRepository.writeFile(requireNotNull(stateFlow.value.direction).value.points)
+            response.ifNotSuccessful {
+                _stateFlow.emit(
+                    stateFlow.value.copy(
+                        message = SingleUse(it.toString())
+                    )
+                )
+            }
+            response.ifSuccessful {
+                val shareIntent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    //type = "*/*"
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_STREAM, Uri.parse("file://$it"))
+                }
+                _stateFlow.emit(
+                    stateFlow.value.copy(
+                        executeIntent = SingleUse(Pair(shareIntent, true))
+                    )
+                )
+            }
         }
     }
 
@@ -73,7 +103,7 @@ class MapViewModel @Inject constructor(
             val navigationIntent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
 
             _stateFlow.emit(
-                stateFlow.value.copy(executeIntent = SingleUse(navigationIntent))
+                stateFlow.value.copy(executeIntent = SingleUse(Pair(navigationIntent, false)))
             )
         }
     }
@@ -166,7 +196,7 @@ class MapViewModel @Inject constructor(
                 _stateFlow.emit(
                     stateFlow.value.copy(
                         isLoading = SingleUse(false),
-                        message = SingleUse("Error")
+                        message = SingleUse(it.toString())
                     )
                 )
             }
@@ -191,6 +221,7 @@ class MapViewModel @Inject constructor(
 
     override fun onCleared() {
         directionRepository.dispose()
+        directionFileWriterRepository.dispose()
         super.onCleared()
     }
 }

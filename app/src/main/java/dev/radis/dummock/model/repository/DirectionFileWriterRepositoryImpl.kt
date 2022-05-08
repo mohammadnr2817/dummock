@@ -23,7 +23,7 @@ class DirectionFileWriterRepositoryImpl @Inject constructor(
         var result: String? = null
         var hasError = false
 
-        coroutineScope.async(Dispatchers.IO) {
+        coroutineScope.async {
             val jsonData = Gson().toJson(points)
             val writeResponse = fileWriter.write(jsonData)
             writeResponse.ifNotSuccessful {

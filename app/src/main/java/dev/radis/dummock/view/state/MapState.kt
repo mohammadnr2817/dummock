@@ -16,5 +16,5 @@ data class MapState(
     var directionRequestType: String = StringConstants.DIRECTION_TYPE_CAR,
     val speed: Int = NumericConstants.DEFAULT_SPEED_KMH,
     val serviceRunning: SingleUse<Boolean>? = null,
-    val executeIntent: SingleUse<Intent>? = null
+    val executeIntent: SingleUse<Pair<Intent, Boolean>>? = null
 ) : MviState
