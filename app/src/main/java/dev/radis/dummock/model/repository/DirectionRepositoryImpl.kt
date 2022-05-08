@@ -1,12 +1,11 @@
 package dev.radis.dummock.model.repository
 
-import android.util.Log
 import dev.radis.dummock.model.dataSource.DirectionReader
 import dev.radis.dummock.model.entity.DirectionModel
 import dev.radis.dummock.model.entity.DirectionRequestModel
 import dev.radis.dummock.model.entity.Point
+import dev.radis.dummock.utils.Logit
 import dev.radis.dummock.utils.constants.DirectionType
-import dev.radis.dummock.utils.constants.StringConstants.DUMMOCK_TAG
 import dev.radis.dummock.utils.response.Failure
 import dev.radis.dummock.utils.response.Response
 import dev.radis.dummock.utils.response.Success
@@ -17,7 +16,7 @@ import kotlinx.coroutines.cancel
 import javax.inject.Inject
 
 class DirectionRepositoryImpl @Inject constructor(
-    val directionReader: DirectionReader
+    private val directionReader: DirectionReader
 ) : DirectionRepository {
 
     private var coroutineScope = CoroutineScope(Dispatchers.IO)
@@ -39,7 +38,7 @@ class DirectionRepositoryImpl @Inject constructor(
                     )
                 )
                 directionResponse.ifNotSuccessful {
-                    Log.d(DUMMOCK_TAG, it.toString())
+                    Logit.d(it)
                     hasError = true
                 }
                 directionResponse.ifSuccessful {
