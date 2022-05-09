@@ -270,11 +270,11 @@ class MapFragment : Fragment(), MviView<MapState> {
     private fun executeIntentState(
         action: SingleUse<Pair<Intent, Boolean>>?
     ) {
-        action?.let {
-            if (it.value.second) {
-                startActivity(Intent.createChooser(it.value.first, null))
+        action?.ifNotUsedBefore()?.let {
+            if (it.second) {
+                startActivity(Intent.createChooser(it.first, null))
             } else {
-                startActivity(it.value.first)
+                startActivity(it.first)
             }
         }
     }
