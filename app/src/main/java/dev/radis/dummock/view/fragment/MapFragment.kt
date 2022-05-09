@@ -281,15 +281,7 @@ class MapFragment : Fragment(), MviView<MapState> {
 
     private fun renderMarkerState(markers: SingleUse<List<Point>>?) {
         markers?.ifNotUsedBefore()?.let { points ->
-            val markersToRemove: MutableList<Marker> = mutableListOf()
-            markersList.forEach { marker ->
-                if (!points.contains(Point(marker.latLng.latitude, marker.latLng.longitude)))
-                    markersToRemove.add(marker)
-            }
-            markersToRemove.forEach { marker ->
-                binding.mapNeshanMapView.removeMarker(marker)
-                markersList.remove(marker)
-            }
+            removeMarkersBasedOnPoints(points)
 
             points.forEach { point ->
                 val marker = Marker(
@@ -307,6 +299,17 @@ class MapFragment : Fragment(), MviView<MapState> {
                     marker
                 )
                 markersList.add(marker)
+            }
+        }
+    }
+
+    private fun removeMarkersBasedOnPoints(points: List<Point>) {
+        val iterator = markersList.iterator()
+        while (iterator.hasNext()) {
+            val marker = iterator.next()
+            if (!points.contains(Point(marker.latLng.latitude, marker.latLng.longitude))) {
+                binding.mapNeshanMapView.removeMarker(marker)
+                iterator.remove()
             }
         }
     }
