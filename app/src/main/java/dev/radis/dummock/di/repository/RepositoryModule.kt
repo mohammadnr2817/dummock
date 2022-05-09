@@ -2,8 +2,8 @@ package dev.radis.dummock.di.repository
 
 import dagger.Binds
 import dagger.Module
-import dev.radis.dummock.model.repository.DirectionFileWriterRepository
-import dev.radis.dummock.model.repository.DirectionFileWriterRepositoryImpl
+import dev.radis.dummock.model.repository.DirectionFileRepository
+import dev.radis.dummock.model.repository.DirectionFileRepositoryImpl
 import dev.radis.dummock.model.repository.DirectionRepository
 import dev.radis.dummock.model.repository.DirectionRepositoryImpl
 
@@ -14,6 +14,6 @@ interface RepositoryModule {
     fun bindDirectionRepository(directionRepositoryImpl: DirectionRepositoryImpl): DirectionRepository
 
     @Binds
-    fun bindDirectionFileWriterRepository(directionFileWriterRepositoryImpl: DirectionFileWriterRepositoryImpl): DirectionFileWriterRepository
+    fun bindDirectionFileWriterRepository(directionFileRepositoryImpl: DirectionFileRepositoryImpl): DirectionFileRepository
 
 }

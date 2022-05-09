@@ -44,6 +44,7 @@ import dev.radis.dummock.utils.constants.StringConstants.DIRECTION_TYPE_BIKE
 import dev.radis.dummock.utils.constants.StringConstants.DIRECTION_TYPE_CAR
 import dev.radis.dummock.utils.extension.*
 import dev.radis.dummock.utils.mvi.MviView
+import dev.radis.dummock.view.activity.StoragePermissionHandler
 import dev.radis.dummock.view.intent.MapIntent
 import dev.radis.dummock.view.state.MapState
 import dev.radis.dummock.viewmodel.MapViewModel
@@ -116,14 +117,6 @@ class MapFragment : Fragment(), MviView<MapState> {
                 }
             }
         })
-    }
-
-    private fun canHandleBackPressed(): Boolean {
-        if (viewModel.stateFlow.value.markers.value.isNotEmpty()) {
-            viewModel.handleIntent(MapIntent.RemoveLastLocationIntent)
-            return true
-        }
-        return false
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -217,7 +210,17 @@ class MapFragment : Fragment(), MviView<MapState> {
         }
 
         binding.mapBtnShareRoute.setOnClickListener {
-            viewModel.handleIntent(MapIntent.ShareRouteIntent)
+            (requireActivity() as StoragePermissionHandler).requestPermission { isGranted ->
+                if (isGranted) {
+                    viewModel.handleIntent(MapIntent.ShareRouteIntent)
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Can't share file without permission!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
         }
 
     }
@@ -225,6 +228,14 @@ class MapFragment : Fragment(), MviView<MapState> {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun canHandleBackPressed(): Boolean {
+        if (viewModel.stateFlow.value.markers.value.isNotEmpty()) {
+            viewModel.handleIntent(MapIntent.RemoveLastLocationIntent)
+            return true
+        }
+        return false
     }
 
     override fun renderState(state: MapState) {

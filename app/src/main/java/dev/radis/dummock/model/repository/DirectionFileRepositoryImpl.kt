@@ -13,9 +13,9 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import javax.inject.Inject
 
-class DirectionFileWriterRepositoryImpl @Inject constructor(
+class DirectionFileRepositoryImpl @Inject constructor(
     private val fileWriter: FileWriter
-) : DirectionFileWriterRepository {
+) : DirectionFileRepository {
 
     private var coroutineScope = CoroutineScope(Dispatchers.IO)
 

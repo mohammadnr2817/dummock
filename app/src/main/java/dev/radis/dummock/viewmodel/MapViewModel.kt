@@ -5,11 +5,12 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.radis.dummock.model.entity.DirectionModel
 import dev.radis.dummock.model.entity.Point
-import dev.radis.dummock.model.repository.DirectionFileWriterRepository
+import dev.radis.dummock.model.repository.DirectionFileRepository
 import dev.radis.dummock.model.repository.DirectionRepository
 import dev.radis.dummock.utils.SingleUse
 import dev.radis.dummock.utils.constants.DirectionType
@@ -21,14 +22,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.io.File
 import java.util.*
 import javax.inject.Inject
 
 
 class MapViewModel @Inject constructor(
     private val directionRepository: DirectionRepository,
-    private val directionFileWriterRepository: DirectionFileWriterRepository,
-    context: Context
+    private val directionFileRepository: DirectionFileRepository,
+    private val context: Context
 ) : ViewModel(), MviModel<MapIntent, MapState> {
 
     private val _stateFlow: MutableStateFlow<MapState> = MutableStateFlow(MapState())
@@ -61,7 +63,7 @@ class MapViewModel @Inject constructor(
     private fun shareRoute() {
         viewModelScope.launch(Dispatchers.IO) {
             val response =
-                directionFileWriterRepository.writeFile(requireNotNull(stateFlow.value.direction).value.points)
+                directionFileRepository.writeFile(requireNotNull(stateFlow.value.direction).value.points)
             response.ifNotSuccessful {
                 _stateFlow.emit(
                     stateFlow.value.copy(
@@ -70,11 +72,16 @@ class MapViewModel @Inject constructor(
                 )
             }
             response.ifSuccessful {
+                val uri = FileProvider.getUriForFile(
+                    context,
+                    context.applicationContext.packageName.toString() + ".provider",
+                    File(it)
+                )
+
                 val shareIntent = Intent().apply {
                     action = Intent.ACTION_SEND
-                    //type = "*/*"
-                    type = "text/plain"
-                    putExtra(Intent.EXTRA_STREAM, Uri.parse("file://$it"))
+                    type = "*/*"
+                    putExtra(Intent.EXTRA_STREAM, uri)
                 }
                 _stateFlow.emit(
                     stateFlow.value.copy(
@@ -221,7 +228,7 @@ class MapViewModel @Inject constructor(
 
     override fun onCleared() {
         directionRepository.dispose()
-        directionFileWriterRepository.dispose()
+        directionFileRepository.dispose()
         super.onCleared()
     }
 }
