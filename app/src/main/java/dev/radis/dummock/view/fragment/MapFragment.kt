@@ -37,6 +37,7 @@ import dev.radis.dummock.utils.constants.DirectionType
 import dev.radis.dummock.utils.constants.NumericConstants.FIRST_LOCATION_INDEX
 import dev.radis.dummock.utils.constants.NumericConstants.MAP_ACTION_TIME
 import dev.radis.dummock.utils.constants.NumericConstants.MAP_ZOOM
+import dev.radis.dummock.utils.constants.NumericConstants.MAP_ZOOM_DEFAULT
 import dev.radis.dummock.utils.constants.NumericConstants.MARKER_SIZE
 import dev.radis.dummock.utils.constants.NumericConstants.POLYLINE_WIDTH
 import dev.radis.dummock.utils.constants.NumericConstants.SECOND_LOCATION_INDEX
@@ -298,6 +299,7 @@ class MapFragment : Fragment(), MviView<MapState> {
                 binding.mapNeshanMapView.addMarker(
                     marker
                 )
+                binding.mapNeshanMapView.setZoom(MAP_ZOOM_DEFAULT, MAP_ACTION_TIME)
                 markersList.add(marker)
             }
         }
