@@ -25,6 +25,7 @@ import com.carto.utils.BitmapUtils
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dev.radis.dummock.R
 import dev.radis.dummock.databinding.FragmentMapBinding
 import dev.radis.dummock.di.map.MapComponentBuilder
@@ -41,6 +42,8 @@ import dev.radis.dummock.utils.constants.NumericConstants.MAP_ZOOM_DEFAULT
 import dev.radis.dummock.utils.constants.NumericConstants.MARKER_SIZE
 import dev.radis.dummock.utils.constants.NumericConstants.POLYLINE_WIDTH
 import dev.radis.dummock.utils.constants.NumericConstants.SECOND_LOCATION_INDEX
+import dev.radis.dummock.utils.constants.StringConstants.DIALOG_CANCEL
+import dev.radis.dummock.utils.constants.StringConstants.DIALOG_OK
 import dev.radis.dummock.utils.constants.StringConstants.DIRECTION_TYPE_BIKE
 import dev.radis.dummock.utils.constants.StringConstants.DIRECTION_TYPE_CAR
 import dev.radis.dummock.utils.extension.*
@@ -65,6 +68,8 @@ class MapFragment : Fragment(), MviView<MapState> {
     private var currentDirectionPolyline: Polyline? = null
 
     private lateinit var routeDetailBottomSheetBehavior: BottomSheetBehavior<MaterialCardView>
+    private lateinit var materialAlertDialogBuilder: MaterialAlertDialogBuilder
+    private lateinit var speedDialogView: View
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -126,6 +131,8 @@ class MapFragment : Fragment(), MviView<MapState> {
         routeDetailBottomSheetBehavior =
             BottomSheetBehavior.from(binding.mapViewBottom.btmSheetRouteDetailRoot)
 
+        materialAlertDialogBuilder = MaterialAlertDialogBuilder(requireNotNull(context))
+
         lifecycleScope.launch(Dispatchers.Main) {
             viewModel.stateFlow.collect { state ->
                 renderState(state)
@@ -184,6 +191,10 @@ class MapFragment : Fragment(), MviView<MapState> {
             )
         }
 
+        binding.mapViewBottom.btmSheetRouteDetailSettingsSpeed.setOnClickListener {
+            showSpeedDialog()
+        }
+
         binding.mapBtnOrigin.setOnLongClickListener {
             viewModel.handleIntent(
                 MapIntent.CopyToClipboardIntent(binding.mapBtnOrigin.text.toString())
@@ -224,6 +235,19 @@ class MapFragment : Fragment(), MviView<MapState> {
             }
         }
 
+    }
+
+    private fun showSpeedDialog() {
+        speedDialogView = LayoutInflater.from(requireNotNull(context))
+            .inflate(R.layout.dialog_speed, null, false)
+        materialAlertDialogBuilder.setView(speedDialogView)
+            .setPositiveButton(DIALOG_OK) { dialog, i ->
+                dialog.dismiss()
+            }
+            .setNegativeButton(DIALOG_CANCEL) { dialog, i ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     override fun onDestroyView() {
