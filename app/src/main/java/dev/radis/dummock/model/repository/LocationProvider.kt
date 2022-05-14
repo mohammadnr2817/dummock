@@ -181,7 +181,12 @@ class LocationProvider : Service() {
             action = FOREGROUND_NOTIFICATION_ACTION_STOP
         }
         val stopSelfPendingIntent =
-            PendingIntent.getService(this, 0, stopSelfIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+            PendingIntent.getService(
+                this,
+                0,
+                stopSelfIntent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
+            )
 
         return NotificationCompat.Action(
             R.drawable.nav_icon,
