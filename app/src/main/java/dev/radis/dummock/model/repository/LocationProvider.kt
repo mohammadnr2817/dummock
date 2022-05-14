@@ -141,7 +141,11 @@ class LocationProvider : Service() {
                 speedAccuracyMetersPerSecond = PROVIDER_SPEED_ACCURACY_METERS_PER_SECOND
             }
         }
-        locationManager.setTestProviderLocation(PROVIDER_GPS, location)
+        try {
+            locationManager.setTestProviderLocation(PROVIDER_GPS, location)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
         coroutineScope.launch {
             _locationFlow.emit(point)
         }
