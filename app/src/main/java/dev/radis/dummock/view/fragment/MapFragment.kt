@@ -320,6 +320,7 @@ class MapFragment : Fragment(), MviView<MapState> {
                 getString(if (it.isEmpty()) R.string.txt_choose_origin else R.string.txt_choose_destination)
             if (it.size < 2) {
                 removePreviousPolyline()
+                if (it.isNotEmpty()) stopProvidingLocation()
                 binding.mapChooseLocationMarker.fadeVisible()
                 binding.mapBtnChooseLocation.fadeVisible()
             } else {
