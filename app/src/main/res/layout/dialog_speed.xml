@@ -4,13 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+
+    <dev.radis.dummock.view.custom.SteeringWheel
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Speed: 50"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:wheel_color="@color/black"
+        app:wheel_line_count="3"
+        app:wheel_line_width="6dp"
+        app:wheel_out_radius="96dp"
+        app:wheel_out_width="8dp"
+        app:wheel_view_center="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
