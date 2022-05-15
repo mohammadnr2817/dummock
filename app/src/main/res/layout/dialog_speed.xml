@@ -12,6 +12,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:text_color="@color/purple_500"
+        app:text_size="42"
         app:wheel_color="@color/black"
         app:wheel_line_count="3"
         app:wheel_line_width="6dp"

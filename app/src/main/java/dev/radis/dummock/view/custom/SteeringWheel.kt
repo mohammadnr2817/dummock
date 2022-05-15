@@ -1,10 +1,12 @@
 package dev.radis.dummock.view.custom
 
-import android.R.attr.radius
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.text.Layout
+import android.text.StaticLayout
+import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -19,6 +21,10 @@ class SteeringWheel(context: Context, attrs: AttributeSet) : View(context, attrs
     private var wheelViewCenter = false
     private var wheelViewSize = 320
     private var wheelColor = Color.BLACK
+
+    private var speed = 50
+    private var textColor = Color.BLACK
+    private var textSize = 72
 
     private var wheelOutRadius = 120F
     private var wheelOutWidth = 10f
@@ -36,7 +42,13 @@ class SteeringWheel(context: Context, attrs: AttributeSet) : View(context, attrs
                     getBoolean(R.styleable.SteeringWheel_wheel_view_center, false)
                 wheelColor = getColor(
                     R.styleable.SteeringWheel_wheel_color,
-                    ContextCompat.getColor(context, android.R.color.background_dark)
+                    ContextCompat.getColor(context, android.R.color.black)
+                )
+                speed = getInt(R.styleable.SteeringWheel_default_speed, speed)
+                textSize = getInt(R.styleable.SteeringWheel_text_size, textSize)
+                textColor = getColor(
+                    R.styleable.SteeringWheel_text_color,
+                    ContextCompat.getColor(context, android.R.color.black)
                 )
                 wheelOutRadius =
                     getDimension(R.styleable.SteeringWheel_wheel_out_radius, wheelOutRadius)
@@ -59,6 +71,7 @@ class SteeringWheel(context: Context, attrs: AttributeSet) : View(context, attrs
             drawWheelOut(it)
             drawWheelIn(it)
             drawWheelLines(it)
+            drawText(it)
         }
     }
 
@@ -68,7 +81,7 @@ class SteeringWheel(context: Context, attrs: AttributeSet) : View(context, attrs
         paint.strokeWidth = wheelOutWidth
         paint.style = Paint.Style.STROKE
 
-        canvas.drawCircle(wheelViewSize / 2f, wheelViewSize / 2f, wheelOutRadius / 2f, paint)
+        canvas.drawCircle(wheelViewSize / 2f, wheelViewSize / 2f, wheelOutRadius, paint)
     }
 
     private fun drawWheelIn(canvas: Canvas) {
@@ -77,7 +90,7 @@ class SteeringWheel(context: Context, attrs: AttributeSet) : View(context, attrs
         canvas.drawCircle(
             wheelViewSize / 2f,
             wheelViewSize / 2f,
-            wheelOutRadius / 8f,
+            wheelOutRadius / 4f,
             paint
         )
     }
@@ -88,12 +101,11 @@ class SteeringWheel(context: Context, attrs: AttributeSet) : View(context, attrs
         var angle = 0f
         val pointAngle: Float = (360 / wheelLineCount).toFloat()
         while (angle < 361) {
-            //move round the circle to each point
             val displacedAngle = angle - 90
             val x: Float =
-                wheelViewSize / 2f + (cos(Math.toRadians(displacedAngle.toDouble())).toFloat() * radius) //convert angle to radians for x and y coordinates
+                wheelViewSize / 2f + ((wheelOutRadius) * cos(Math.toRadians(displacedAngle.toDouble())).toFloat())
             val y: Float =
-                wheelViewSize / 2f + (sin(Math.toRadians(displacedAngle.toDouble())).toFloat() * radius)
+                wheelViewSize / 2f + ((wheelOutRadius) * sin(Math.toRadians(displacedAngle.toDouble())).toFloat())
             canvas.drawLine(
                 wheelViewSize / 2f,
                 wheelViewSize / 2f,
@@ -103,7 +115,31 @@ class SteeringWheel(context: Context, attrs: AttributeSet) : View(context, attrs
             )
             angle += pointAngle
         }
+    }
 
+    private fun drawText(canvas: Canvas) {
+        paint.color = textColor
+        paint.textSize = textSize.toFloat()
+
+        canvas.drawText(
+            "$speed Km",
+            wheelViewSize / 2f,
+            wheelViewSize / 2f,
+            paint
+        )
+
+        val textPaint = TextPaint()
+        textPaint.bgColor = wheelColor
+        textPaint.isAntiAlias = true
+        textPaint.textSize = textSize.toFloat() * resources.displayMetrics.density
+        textPaint.color = textColor
+
+        val width = textPaint.measureText("$speed Km").toInt()
+        val staticLayout = StaticLayout(
+            "$speed Km", textPaint,
+            width, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0F, false
+        )
+        staticLayout.draw(canvas)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
