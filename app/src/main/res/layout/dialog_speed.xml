@@ -8,6 +8,7 @@
     <dev.radis.dummock.view.custom.SteeringWheel
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:default_speed="50"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

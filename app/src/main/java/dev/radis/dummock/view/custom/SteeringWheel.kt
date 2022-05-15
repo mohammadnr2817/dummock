@@ -4,9 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.text.Layout
-import android.text.StaticLayout
-import android.text.TextPaint
+import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -25,6 +23,9 @@ class SteeringWheel(context: Context, attrs: AttributeSet) : View(context, attrs
     private var speed = 50
     private var textColor = Color.BLACK
     private var textSize = 72
+    private var textPadding = 64
+    private val text: String
+        get() = "$speed Km"
 
     private var wheelOutRadius = 120F
     private var wheelOutWidth = 10f
@@ -119,27 +120,16 @@ class SteeringWheel(context: Context, attrs: AttributeSet) : View(context, attrs
 
     private fun drawText(canvas: Canvas) {
         paint.color = textColor
-        paint.textSize = textSize.toFloat()
+        paint.typeface = Typeface.DEFAULT_BOLD
+        paint.textSize = textSize.toFloat() * resources.displayMetrics.density
 
         canvas.drawText(
-            "$speed Km",
-            wheelViewSize / 2f,
-            wheelViewSize / 2f,
+            text,
+            (wheelViewSize / 2f) - ((text.length.toFloat() * paint.textSize) / 4),
+            (wheelViewSize / 2f) + wheelOutRadius + paint.textSize + textPadding,
             paint
         )
 
-        val textPaint = TextPaint()
-        textPaint.bgColor = wheelColor
-        textPaint.isAntiAlias = true
-        textPaint.textSize = textSize.toFloat() * resources.displayMetrics.density
-        textPaint.color = textColor
-
-        val width = textPaint.measureText("$speed Km").toInt()
-        val staticLayout = StaticLayout(
-            "$speed Km", textPaint,
-            width, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0F, false
-        )
-        staticLayout.draw(canvas)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
