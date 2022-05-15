@@ -1,5 +1,6 @@
 package dev.radis.dummock.view.fragment
 
+import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
@@ -237,10 +238,12 @@ class MapFragment : Fragment(), MviView<MapState> {
 
     }
 
+    @SuppressLint("InflateParams")
     private fun showSpeedDialog() {
         speedDialogView = LayoutInflater.from(requireNotNull(context))
             .inflate(R.layout.dialog_speed, null, false)
         materialAlertDialogBuilder.setView(speedDialogView)
+            .setTitle(" ")
             .setPositiveButton(DIALOG_OK) { dialog, i ->
                 dialog.dismiss()
             }
