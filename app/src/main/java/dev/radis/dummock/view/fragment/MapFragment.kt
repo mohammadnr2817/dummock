@@ -245,15 +245,9 @@ class MapFragment : Fragment(), MviView<MapState> {
             .inflate(R.layout.dialog_speed, null, false)
         val steeringWheelView =
             speedDialogView.findViewById<SteeringWheel>(R.id.dialogSteeringWheel)
-        steeringWheelView.setSpeed(viewModel.stateFlow.value.speed)
 
         materialAlertDialogBuilder.setView(speedDialogView)
             .setPositiveButton(DIALOG_OK) { dialog, i ->
-                Toast.makeText(
-                    requireNotNull(context),
-                    "${steeringWheelView.getSpeed()}",
-                    Toast.LENGTH_SHORT
-                ).show()
                 dialog.dismiss()
             }
             .setNegativeButton(DIALOG_CANCEL) { dialog, i ->

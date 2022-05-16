@@ -9,18 +9,13 @@
         android:id="@+id/dialogSteeringWheel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:default_speed="50"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:text_color="@color/purple_500"
-        app:text_size="42"
         app:wheel_color="@color/black"
         app:wheel_line_count="3"
         app:wheel_line_width="6dp"
-        app:wheel_out_radius="96dp"
-        app:wheel_out_width="8dp"
-        app:wheel_view_center="true" />
+        app:wheel_out_width="8dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="SteeringWheel">
-        <attr name="wheel_view_center" format="boolean" />
         <attr name="wheel_color" format="color" />
-        <attr name="text_color" format="color" />
-        <attr name="text_size" format="integer" />
-        <attr name="default_speed" format="integer" />
         <attr name="wheel_out_width" format="dimension" />
-        <attr name="wheel_out_radius" format="dimension" />
         <attr name="wheel_line_width" format="dimension" />
         <attr name="wheel_line_count" format="integer" />
     </declare-styleable>
