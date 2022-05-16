@@ -5,6 +5,8 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
+import android.os.Bundle
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -134,7 +136,7 @@ class SteeringWheel(context: Context, attrs: AttributeSet) : View(context, attrs
 
     }
 
-    private fun setSpeed(speed: Int) {
+    fun setSpeed(speed: Int) {
         this.speed = speed
         // to update the view appearance
         invalidate()
@@ -149,6 +151,23 @@ class SteeringWheel(context: Context, attrs: AttributeSet) : View(context, attrs
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         wheelViewSize = measuredWidth.coerceAtMost(measuredHeight)
         setMeasuredDimension(wheelViewSize, wheelViewSize)
+    }
+
+    override fun onSaveInstanceState(): Parcelable {
+        val bundle = Bundle()
+        bundle.putParcelable("instanceState", super.onSaveInstanceState())
+        bundle.putInt("speed", speed)
+        return bundle
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        var viewState = state
+        if (viewState is Bundle) {
+            val bundle = viewState
+            speed = bundle.getInt("speed")
+            viewState = bundle.getParcelable("instanceState")
+        }
+        super.onRestoreInstanceState(viewState)
     }
 
 }
