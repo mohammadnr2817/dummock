@@ -6,9 +6,12 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.ContextCompat
 import dev.radis.dummock.R
+import dev.radis.dummock.utils.Logit
+import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
@@ -29,6 +32,9 @@ class SteeringWheel(context: Context, attrs: AttributeSet) : View(context, attrs
 
     private var wheelLineWidth = 8f
     private var wheelLineCount = 3
+
+    private var touchX1: Float = 0F
+    private var touchY1: Float = 0F
 
     init {
         setAttributes(attrs)
@@ -164,6 +170,56 @@ class SteeringWheel(context: Context, attrs: AttributeSet) : View(context, attrs
             min(measuredWidth, measuredHeight),
             min(measuredWidth, measuredHeight)
         )
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        when (event?.action) {
+            MotionEvent.ACTION_DOWN -> {
+                touchX1 = event.x - getMeasuredSize() / 2
+                touchY1 = event.y - getMeasuredSize() / 2
+            }
+            MotionEvent.ACTION_MOVE -> {
+                val x2 = event.x - getMeasuredSize() / 2
+                val y2 = event.y - getMeasuredSize() / 2
+
+//                val anglePoint1 = getAngleFromArcTan(atan(touchY1 / touchX1), touchX1, touchY1)
+//                val anglePoint2 = getAngleFromArcTan(atan(y2 / x2), x2, y2)
+
+                // --- val time1 = SystemClock.elapsedRealtime()
+
+                val anglePoint1 = getAngleFromArcTan2(atan2(touchY1, touchX1))
+                val anglePoint2 = getAngleFromArcTan2(atan2(y2, x2))
+
+                Logit.d(
+                    "1: ${Math.toDegrees(anglePoint1.toDouble())}, 2: ${
+                        Math.toDegrees(
+                            anglePoint2.toDouble()
+                        )
+                    } -> res:${Math.toDegrees((anglePoint2 - anglePoint1).toDouble())}"
+                )
+                rotation =
+                    (rotation + Math.toDegrees((anglePoint2 - anglePoint1).toDouble())).toFloat()
+
+                touchX1 = x2
+                touchY1 = y2
+            }
+        }
+        return true
+    }
+
+    private fun getAngleFromArcTan(aTan: Float, x: Float, y: Float): Float {
+        return if (x >= 0 && y >= 0) aTan
+        else if (x >= 0 && y < 0) {
+            (aTan + Math.PI).toFloat()
+        } else if (x < 0 && y >= 0) {
+            (aTan + Math.PI / 2).toFloat()
+        } else {
+            (aTan + (3 / 2 * Math.PI)).toFloat()
+        }
+    }
+
+    private fun getAngleFromArcTan2(aTan: Float): Float {
+        return (aTan + Math.PI).toFloat()
     }
 
 }
