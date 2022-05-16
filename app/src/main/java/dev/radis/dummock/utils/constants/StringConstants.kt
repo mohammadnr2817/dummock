@@ -7,6 +7,8 @@ import dev.radis.dummock.utils.constants.StringConstants.DIRECTION_TYPE_CAR
 object StringConstants {
     const val BASE_DIRECTION_URL = "https://api.neshan.org/"
     const val APP_NAME = "DUMMOCK"
+    const val ARCHIVE_DATABASE_NAME = "dummock_archive_database"
+    const val ARCHIVE_TABLE_NAME = "dummock_archive_table"
     const val DIALOG_OK = "Ok"
     const val DIALOG_CANCEL = "Cancel"
     const val DUMMOCK_TAG = "DUMMOCK_TAG"
