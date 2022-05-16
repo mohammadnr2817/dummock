@@ -34,6 +34,10 @@ class SteeringWheel(context: Context, attrs: AttributeSet) : View(context, attrs
     private var wheelLineCount = 3
 
     init {
+        setAttributes(attrs)
+    }
+
+    private fun setAttributes(attrs: AttributeSet) {
         context.theme.obtainStyledAttributes(
             attrs,
             R.styleable.SteeringWheel, 0, 0
@@ -77,8 +81,6 @@ class SteeringWheel(context: Context, attrs: AttributeSet) : View(context, attrs
     }
 
     private fun drawWheelOut(canvas: Canvas) {
-        //canvas.drawCircle(centerOfX, centerOfY, wheelOutRadius, paint)
-
         paint.strokeWidth = wheelOutWidth
         paint.style = Paint.Style.STROKE
 
@@ -130,6 +132,17 @@ class SteeringWheel(context: Context, attrs: AttributeSet) : View(context, attrs
             paint
         )
 
+    }
+
+    private fun setSpeed(speed: Int) {
+        this.speed = speed
+        // to update the view appearance
+        invalidate()
+        requestLayout()
+    }
+
+    fun getSpeed(): Int {
+        return speed
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

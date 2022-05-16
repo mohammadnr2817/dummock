@@ -6,6 +6,7 @@
 
 
     <dev.radis.dummock.view.custom.SteeringWheel
+        android:id="@+id/dialogSteeringWheel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:default_speed="50"

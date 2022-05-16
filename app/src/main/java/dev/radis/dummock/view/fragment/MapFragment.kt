@@ -50,6 +50,7 @@ import dev.radis.dummock.utils.constants.StringConstants.DIRECTION_TYPE_CAR
 import dev.radis.dummock.utils.extension.*
 import dev.radis.dummock.utils.mvi.MviView
 import dev.radis.dummock.view.activity.StoragePermissionHandler
+import dev.radis.dummock.view.custom.SteeringWheel
 import dev.radis.dummock.view.intent.MapIntent
 import dev.radis.dummock.view.state.MapState
 import dev.radis.dummock.viewmodel.MapViewModel
@@ -243,8 +244,14 @@ class MapFragment : Fragment(), MviView<MapState> {
         speedDialogView = LayoutInflater.from(requireNotNull(context))
             .inflate(R.layout.dialog_speed, null, false)
         materialAlertDialogBuilder.setView(speedDialogView)
-            .setTitle(" ")
             .setPositiveButton(DIALOG_OK) { dialog, i ->
+                val steeringWheelView =
+                    speedDialogView.findViewById<SteeringWheel>(R.id.dialogSteeringWheel)
+                Toast.makeText(
+                    requireNotNull(context),
+                    "${steeringWheelView.getSpeed()}",
+                    Toast.LENGTH_SHORT
+                ).show()
                 dialog.dismiss()
             }
             .setNegativeButton(DIALOG_CANCEL) { dialog, i ->
