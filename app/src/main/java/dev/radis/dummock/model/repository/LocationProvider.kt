@@ -51,9 +51,9 @@ class LocationProvider : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent?.action == FOREGROUND_NOTIFICATION_ACTION_STOP)
-            stopSelf()
+            stopProvidingLocation()
         else
-            showNotification()
+            createOrUpdateNotification(null)
         return START_NOT_STICKY
     }
 
@@ -76,6 +76,8 @@ class LocationProvider : Service() {
             while (true) {
                 val lastLocation = requireNotNull(lengthIndexedLine).extractPoint(lineIndex)
                 provideNewLocation()
+                val passed = (lineIndex * 100 / requireNotNull(lengthIndexedLine).endIndex).toInt()
+                createOrUpdateNotification("$passed % Passed")
                 val nextLocation = requireNotNull(lengthIndexedLine).extractPoint(lineIndex)
                 val distance = LocationUtils.haversine(
                     Point.fromCoordinate(lastLocation),
@@ -84,16 +86,16 @@ class LocationProvider : Service() {
                 tickerInterval = ((distance / speed) * 60 * 60 * 1000).toLong()
                 delay(tickerInterval)
                 if (lineIndex == lengthIndexedLine?.endIndex)
-                    stopSelf()
+                    stopProvidingLocation()
             }
         }
     }
 
     private fun provideNewLocation() {
         val nextIndex =
-            if (requireNotNull(lengthIndexedLine?.isValidIndex(lineIndex + LINE_INDEX_INTERVAL)))
+            if (requireNotNull(lengthIndexedLine).isValidIndex(lineIndex + LINE_INDEX_INTERVAL))
                 lineIndex + LINE_INDEX_INTERVAL
-            else requireNotNull(lengthIndexedLine?.endIndex)
+            else requireNotNull(lengthIndexedLine).endIndex
         val nextCoordinate =
             Point.fromCoordinate(requireNotNull(lengthIndexedLine).extractPoint(nextIndex))
         submitLocationToProvider(nextCoordinate)
@@ -103,6 +105,11 @@ class LocationProvider : Service() {
     private fun cancelLastProvide() {
         timerJob?.cancel()
         lineIndex = 0.0
+    }
+
+    private fun stopProvidingLocation() {
+        dismissNotification()
+        stopSelf()
     }
 
     @SuppressLint("WrongConstant")
@@ -151,13 +158,39 @@ class LocationProvider : Service() {
         }
     }
 
-    private fun showNotification() {
-        val notification = createNotification()
-        (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).notify(
+    private fun createOrUpdateNotification(notificationContent: String?) {
+        var isNotificationVisible = false
+        val notificationManager =
+            (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+        for (notification in notificationManager.activeNotifications) {
+            if (notification.id == FOREGROUND_NOTIFICATION_ID) {
+                isNotificationVisible = true
+            }
+        }
+        if (isNotificationVisible)
+            updateNotification(notificationManager, notificationContent)
+        else
+            showNotification(notificationManager)
+    }
+
+    private fun showNotification(notificationManager: NotificationManager) {
+        val notification = createNotification(null)
+        notificationManager.notify(
             FOREGROUND_NOTIFICATION_ID,
             notification
         )
         startForeground(FOREGROUND_NOTIFICATION_ID, notification)
+    }
+
+    private fun updateNotification(
+        notificationManager: NotificationManager,
+        notificationContent: String?
+    ) {
+        val notification = createNotification(notificationContent)
+        notificationManager.notify(
+            FOREGROUND_NOTIFICATION_ID,
+            notification
+        )
     }
 
     private fun dismissNotification() {
@@ -189,7 +222,7 @@ class LocationProvider : Service() {
                 this,
                 0,
                 stopSelfIntent,
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
+                PendingIntent.FLAG_IMMUTABLE
             )
 
         return NotificationCompat.Action(
@@ -200,14 +233,16 @@ class LocationProvider : Service() {
 
     }
 
-    private fun createNotification(): Notification {
+    private fun createNotification(notificationContent: String?): Notification {
         createNotificationChannel()
         return NotificationCompat.Builder(this, FOREGROUND_NOTIFICATION_CHANNEL_ID)
             .setContentTitle(FOREGROUND_NOTIFICATION_CONTENT_TITLE)
             .setSmallIcon(R.drawable.nav_icon)
+            .setContentText(notificationContent)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setOngoing(true)
             .setSilent(true)
+            .setOnlyAlertOnce(true)
             .addAction(createStopServiceAction())
             .build()
     }
