@@ -21,4 +21,8 @@ class DatabaseModule {
             .build()
     }
 
+    @Singleton
+    @Provides
+    fun provideArchiveDao(database: ArchiveDatabase) = database.dao()
+
 }
