@@ -40,6 +40,7 @@ import dev.radis.dummock.utils.constants.NumericConstants.FIRST_LOCATION_INDEX
 import dev.radis.dummock.utils.constants.NumericConstants.MAP_ACTION_TIME
 import dev.radis.dummock.utils.constants.NumericConstants.MAP_ZOOM
 import dev.radis.dummock.utils.constants.NumericConstants.MAP_ZOOM_DEFAULT
+import dev.radis.dummock.utils.constants.NumericConstants.MAP_ZOOM_INITIAL
 import dev.radis.dummock.utils.constants.NumericConstants.MARKER_SIZE
 import dev.radis.dummock.utils.constants.NumericConstants.POLYLINE_WIDTH
 import dev.radis.dummock.utils.constants.NumericConstants.SECOND_LOCATION_INDEX
@@ -143,6 +144,7 @@ class MapFragment : Fragment(), MviView<MapState> {
 
         binding.mapNeshanMapView.isTrafficEnabled = true
         binding.mapNeshanMapView.isPoiEnabled = true
+        binding.mapNeshanMapView.setZoom(MAP_ZOOM_INITIAL, MAP_ACTION_TIME)
 
         serviceIntent = Intent(activity, LocationProvider::class.java)
 

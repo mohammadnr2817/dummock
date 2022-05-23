@@ -14,6 +14,7 @@ object NumericConstants {
     const val FOREGROUND_NOTIFICATION_ID = 2817
     const val MARKER_SIZE = 32F
     const val MAP_ZOOM = 18F
+    const val MAP_ZOOM_INITIAL = 16F
     const val MAP_ZOOM_DEFAULT = 14F
     const val MAP_ACTION_TIME = 0.1F
 }
