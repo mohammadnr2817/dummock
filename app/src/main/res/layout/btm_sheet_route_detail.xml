@@ -63,10 +63,19 @@
             app:layout_constraintStart_toStartOf="@id/btmSheetRouteDetailGuideLeft"
             app:layout_constraintTop_toTopOf="@id/btmSheetRouteDetailGuideTop">
 
+            <View
+                android:layout_width="24dp"
+                android:layout_height="4dp"
+                android:background="@drawable/bg_divider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
                 android:id="@+id/btmSheetRouteDetailTxtRouteInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
                 android:text="@string/txt_route_info"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

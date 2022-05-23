@@ -8,6 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="grey_700">@android:color/darker_gray</color>
+    <color name="grey_500">#DDDDDD</color>
     <color name="blue_berry">#FF41626c</color>
     <color name="pink_200">#FFAFA7</color>
     <color name="pink_500">#E67A70</color>
