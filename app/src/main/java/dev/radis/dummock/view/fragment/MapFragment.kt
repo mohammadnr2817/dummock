@@ -292,8 +292,7 @@ class MapFragment : Fragment(), MviView<MapState> {
             binding.mapViewBottom.btmSheetRouteDetailRoot.isVisible = isLoading
         binding.mapViewBottom.btmSheetRouteDetailProgress.isVisible = isLoading
         binding.mapViewBottom.btmSheetRouteDetailMainViews.isVisible = !isLoading
-        binding.mapTxtHelper.isVisible = isLoading
-        binding.mapViewTopViews.isVisible = !isLoading
+        binding.mapViewTop.isVisible = !isLoading
     }
 
     private fun messageState(message: String) {
@@ -385,8 +384,7 @@ class MapFragment : Fragment(), MviView<MapState> {
             viewModel.stateFlow.value.markers.value.size.also {
                 if (it < 2) {
                     binding.mapViewBottom.btmSheetRouteDetailRoot.isVisible = false
-                    binding.mapViewTopViews.isVisible = false
-                    binding.mapTxtHelper.isVisible = true
+                    binding.mapViewTop.isVisible = false
                 }
             }
         }

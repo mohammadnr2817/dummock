@@ -6,130 +6,144 @@
     android:layout_height="match_parent"
     tools:context=".view.fragment.MapFragment">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/mapViewTop"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_margin"
-        app:cardCornerRadius="@dimen/default_corner_radius">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:padding="@dimen/default_margin">
-
-            <TextView
-                android:id="@+id/mapTxtHelper"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/txt_map_help"
-                android:textColor="@android:color/black"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.constraintlayout.widget.Group
-                android:id="@+id/mapViewTopViews"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:constraint_referenced_ids="mapImgSwitchRoutes,mapViewRoutes,mapGpRouteIntents" />
-
-            <ImageView
-                android:id="@+id/mapImgSwitchRoutes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:contentDescription="@string/txt_change_origin_destination"
-                android:focusable="true"
-                android:rotation="90"
-                android:src="@drawable/ic_baseline_compare_arrows_24"
-                app:layout_constraintBottom_toBottomOf="@id/mapViewRoutes"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/mapViewRoutes"
-                app:tint="@color/grey_700" />
-
-            <LinearLayout
-                android:id="@+id/mapViewRoutes"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/default_margin"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/mapImgSwitchRoutes"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/mapBtnOrigin"
-                    style="@style/DButton.Outline.InActive"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    app:icon="@drawable/ic_baseline_navigation_24"
-                    app:iconGravity="end"
-                    tools:text="مکان فعلی" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/mapBtnDestination"
-                    style="@style/DButton.Outline.InActive"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    app:icon="@drawable/ic_baseline_place_24"
-                    app:iconGravity="end"
-                    tools:text="آدرس مقصد مورد نظر" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/mapGpRouteIntents"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:orientation="horizontal"
-                app:layout_constraintLeft_toLeftOf="@id/mapViewRoutes"
-                app:layout_constraintRight_toRightOf="@id/mapViewRoutes"
-                app:layout_constraintTop_toBottomOf="@id/mapViewRoutes">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/mapBtnShareRoute"
-                    style="@style/DButton.Text"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/txt_share_route"
-                    android:textColor="@android:color/black"
-                    android:textSize="12sp"
-                    app:icon="@drawable/ic_baseline_share_24"
-                    app:iconTint="@android:color/black" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/mapBtnNavigateInAnotherApp"
-                    style="@style/DButton.Text"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/txt_navigate_route_intent"
-                    android:textColor="@android:color/black"
-                    android:textSize="12sp"
-                    app:icon="@drawable/ic_baseline_send_24"
-                    app:iconTint="@android:color/black" />
-
-            </LinearLayout>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </com.google.android.material.card.MaterialCardView>
-
     <org.neshan.mapsdk.MapView
         android:id="@+id/mapNeshanMapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mapViewTop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:visibility="gone">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/mapViewTopCardDetails"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="@dimen/default_corner_radius"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:padding="@dimen/default_margin">
+
+                <ImageView
+                    android:id="@+id/mapImgSwitchRoutes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:contentDescription="@string/txt_change_origin_destination"
+                    android:focusable="true"
+                    android:rotation="90"
+                    android:src="@drawable/ic_baseline_compare_arrows_24"
+                    app:layout_constraintBottom_toBottomOf="@id/mapViewRoutes"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/mapViewRoutes"
+                    app:tint="@color/grey_700" />
+
+                <LinearLayout
+                    android:id="@+id/mapViewRoutes"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/default_margin"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/mapImgSwitchRoutes"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/mapBtnOrigin"
+                        style="@style/DButton.Outline.InActive"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        app:icon="@drawable/ic_baseline_navigation_24"
+                        app:iconGravity="end"
+                        tools:text="مکان فعلی" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/mapBtnDestination"
+                        style="@style/DButton.Outline.InActive"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        app:icon="@drawable/ic_baseline_place_24"
+                        app:iconGravity="end"
+                        tools:text="آدرس مقصد مورد نظر" />
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/mapViewTopCardIntents"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_margin"
+            app:cardCornerRadius="@dimen/default_corner_radius"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mapViewTopCardDetails">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:paddingStart="@dimen/small_margin"
+                android:paddingEnd="@dimen/small_margin">
+
+                <LinearLayout
+                    android:id="@+id/mapGpRouteIntents"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/mapBtnShareRoute"
+                        style="@style/DButton.Text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/txt_share_route"
+                        android:textColor="@android:color/black"
+                        android:textSize="12sp"
+                        app:icon="@drawable/ic_baseline_share_24"
+                        app:iconTint="@android:color/black" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/mapBtnNavigateInAnotherApp"
+                        style="@style/DButton.Text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/txt_navigate_route_intent"
+                        android:textColor="@android:color/black"
+                        android:textSize="12sp"
+                        app:icon="@drawable/ic_baseline_send_24"
+                        app:iconTint="@android:color/black" />
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
         android:id="@+id/mapChooseLocationMarker"
