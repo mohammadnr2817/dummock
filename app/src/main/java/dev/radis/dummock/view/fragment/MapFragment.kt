@@ -1,6 +1,5 @@
 package dev.radis.dummock.view.fragment
 
-import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
@@ -44,14 +43,12 @@ import dev.radis.dummock.utils.constants.NumericConstants.MAP_ZOOM_INITIAL
 import dev.radis.dummock.utils.constants.NumericConstants.MARKER_SIZE
 import dev.radis.dummock.utils.constants.NumericConstants.POLYLINE_WIDTH
 import dev.radis.dummock.utils.constants.NumericConstants.SECOND_LOCATION_INDEX
-import dev.radis.dummock.utils.constants.StringConstants.DIALOG_CANCEL
-import dev.radis.dummock.utils.constants.StringConstants.DIALOG_OK
 import dev.radis.dummock.utils.constants.StringConstants.DIRECTION_TYPE_BIKE
 import dev.radis.dummock.utils.constants.StringConstants.DIRECTION_TYPE_CAR
 import dev.radis.dummock.utils.extension.*
 import dev.radis.dummock.utils.mvi.MviView
 import dev.radis.dummock.view.activity.StoragePermissionHandler
-import dev.radis.dummock.view.custom.SteeringWheel
+import dev.radis.dummock.view.dialog.SpeedDialog
 import dev.radis.dummock.view.intent.MapIntent
 import dev.radis.dummock.view.state.MapState
 import dev.radis.dummock.viewmodel.MapViewModel
@@ -72,7 +69,6 @@ class MapFragment : Fragment(), MviView<MapState> {
 
     private lateinit var routeDetailBottomSheetBehavior: BottomSheetBehavior<MaterialCardView>
     private lateinit var materialAlertDialogBuilder: MaterialAlertDialogBuilder
-    private lateinit var speedDialogView: View
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -241,21 +237,12 @@ class MapFragment : Fragment(), MviView<MapState> {
 
     }
 
-    @SuppressLint("InflateParams")
     private fun showSpeedDialog() {
-        speedDialogView = LayoutInflater.from(requireNotNull(context))
-            .inflate(R.layout.dialog_speed, null, false)
-        val steeringWheelView =
-            speedDialogView.findViewById<SteeringWheel>(R.id.dialogSteeringWheel)
-
-        materialAlertDialogBuilder.setView(speedDialogView)
-            .setPositiveButton(DIALOG_OK) { dialog, i ->
-                dialog.dismiss()
-            }
-            .setNegativeButton(DIALOG_CANCEL) { dialog, i ->
-                dialog.dismiss()
-            }
-            .show()
+        val speedDialog = SpeedDialog().newInstance(50)
+        speedDialog.speedListener = { newSpeed ->
+            binding.mapViewBottom.btmSheetRouteDetailSettingsSpeed.text = "$newSpeed"
+        }
+        speedDialog.show(childFragmentManager, SpeedDialog::class.simpleName)
     }
 
     override fun onDestroyView() {

@@ -192,12 +192,12 @@ class SteeringWheel(context: Context, attrs: AttributeSet) : View(context, attrs
 
                 val diffDegrees = Math.toDegrees((anglePoint2 - anglePoint1).toDouble())
 
-                if (abs(diffDegrees) > 1) {
+                if (abs(diffDegrees) > 1 && abs(diffDegrees) < 20) {
                     rotation = (rotation + diffDegrees).toFloat()
 
                     wheelFloatValue += diffDegrees.toFloat()
                     if (wheelFloatValue.toInt() != wheelAbsValue) {
-                        updateListener.invoke(wheelFloatValue.toInt() - wheelAbsValue)
+                        updateListener.invoke((wheelFloatValue.toInt() - wheelAbsValue) * -1)
                         wheelAbsValue = wheelFloatValue.toInt()
                     }
                 }
