@@ -14,7 +14,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:wheel_color="@color/black"
-        app:wheel_line_count="3"
+        app:wheel_line_count="9"
         app:wheel_line_width="6dp"
         app:wheel_out_width="8dp" />
 

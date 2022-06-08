@@ -33,6 +33,10 @@ class SteeringWheel(context: Context, attrs: AttributeSet) : View(context, attrs
     private var touchX1: Float = 0F
     private var touchY1: Float = 0F
 
+    private var wheelFloatValue = 0F
+    private var wheelAbsValue = 0
+    var updateListener: (Int) -> Unit = {}
+
     init {
         setAttributes(attrs)
     }
@@ -188,7 +192,15 @@ class SteeringWheel(context: Context, attrs: AttributeSet) : View(context, attrs
 
                 val diffDegrees = Math.toDegrees((anglePoint2 - anglePoint1).toDouble())
 
-                if (abs(diffDegrees) > 1) rotation = (rotation + diffDegrees).toFloat()
+                if (abs(diffDegrees) > 1) {
+                    rotation = (rotation + diffDegrees).toFloat()
+
+                    wheelFloatValue += diffDegrees.toFloat()
+                    if (wheelFloatValue.toInt() != wheelAbsValue) {
+                        updateListener.invoke(wheelFloatValue.toInt() - wheelAbsValue)
+                        wheelAbsValue = wheelFloatValue.toInt()
+                    }
+                }
 
                 touchX1 = x2
                 touchY1 = y2
