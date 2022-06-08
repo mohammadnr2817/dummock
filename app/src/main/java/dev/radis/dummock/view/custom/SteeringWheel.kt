@@ -1,5 +1,6 @@
 package dev.radis.dummock.view.custom
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -10,11 +11,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.ContextCompat
 import dev.radis.dummock.R
-import dev.radis.dummock.utils.Logit
-import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.min
-import kotlin.math.sin
+import kotlin.math.*
 
 
 class SteeringWheel(context: Context, attrs: AttributeSet) : View(context, attrs) {
@@ -172,6 +169,7 @@ class SteeringWheel(context: Context, attrs: AttributeSet) : View(context, attrs
         )
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> {
@@ -182,23 +180,15 @@ class SteeringWheel(context: Context, attrs: AttributeSet) : View(context, attrs
                 val x2 = event.x - getMeasuredSize() / 2
                 val y2 = event.y - getMeasuredSize() / 2
 
-//                val anglePoint1 = getAngleFromArcTan(atan(touchY1 / touchX1), touchX1, touchY1)
-//                val anglePoint2 = getAngleFromArcTan(atan(y2 / x2), x2, y2)
-
-                // --- val time1 = SystemClock.elapsedRealtime()
+                val inCenter = findDistance(x2, y2, 0F, 0F)
+                if (inCenter < getRadius() / 3.5F) return true
 
                 val anglePoint1 = getAngleFromArcTan2(atan2(touchY1, touchX1))
                 val anglePoint2 = getAngleFromArcTan2(atan2(y2, x2))
 
-                Logit.d(
-                    "1: ${Math.toDegrees(anglePoint1.toDouble())}, 2: ${
-                        Math.toDegrees(
-                            anglePoint2.toDouble()
-                        )
-                    } -> res:${Math.toDegrees((anglePoint2 - anglePoint1).toDouble())}"
-                )
-                rotation =
-                    (rotation + Math.toDegrees((anglePoint2 - anglePoint1).toDouble())).toFloat()
+                val diffDegrees = Math.toDegrees((anglePoint2 - anglePoint1).toDouble())
+
+                if (abs(diffDegrees) > 1) rotation = (rotation + diffDegrees).toFloat()
 
                 touchX1 = x2
                 touchY1 = y2
@@ -207,19 +197,12 @@ class SteeringWheel(context: Context, attrs: AttributeSet) : View(context, attrs
         return true
     }
 
-    private fun getAngleFromArcTan(aTan: Float, x: Float, y: Float): Float {
-        return if (x >= 0 && y >= 0) aTan
-        else if (x >= 0 && y < 0) {
-            (aTan + Math.PI).toFloat()
-        } else if (x < 0 && y >= 0) {
-            (aTan + Math.PI / 2).toFloat()
-        } else {
-            (aTan + (3 / 2 * Math.PI)).toFloat()
-        }
-    }
-
     private fun getAngleFromArcTan2(aTan: Float): Float {
         return (aTan + Math.PI).toFloat()
+    }
+
+    private fun findDistance(x1: Float, y1: Float, x2: Float, y2: Float): Float {
+        return sqrt((x2 - x1).pow(2) + (y2 - y1).pow(2))
     }
 
 }
