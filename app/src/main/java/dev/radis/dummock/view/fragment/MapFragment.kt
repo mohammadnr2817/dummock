@@ -265,7 +265,7 @@ class MapFragment : Fragment(), MviView<MapState> {
             loadingState(it.value)
         }
         state.message?.let {
-            messageState(state.message.value)
+            messageState(state.message)
         }
         renderMarkerState(state.markers)
         renderRouteDetailsState(state.direction)
@@ -284,8 +284,10 @@ class MapFragment : Fragment(), MviView<MapState> {
         binding.mapViewTop.isVisible = !isLoading
     }
 
-    private fun messageState(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    private fun messageState(message: SingleUse<String>) {
+        message.ifNotUsedBefore()?.let {
+            Toast.makeText(context, message.value, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun executeIntentState(
