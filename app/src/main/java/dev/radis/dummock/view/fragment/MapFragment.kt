@@ -31,8 +31,9 @@ import dev.radis.dummock.databinding.FragmentMapBinding
 import dev.radis.dummock.di.map.MapComponentBuilder
 import dev.radis.dummock.model.entity.DirectionModel
 import dev.radis.dummock.model.entity.Point
-import dev.radis.dummock.model.repository.LocationProvider
+import dev.radis.dummock.model.repository.NavigationLocationProvider
 import dev.radis.dummock.utils.LocationUtils
+import dev.radis.dummock.utils.Logit
 import dev.radis.dummock.utils.SingleUse
 import dev.radis.dummock.utils.constants.DirectionType
 import dev.radis.dummock.utils.constants.NumericConstants.FIRST_LOCATION_INDEX
@@ -74,21 +75,21 @@ class MapFragment : Fragment(), MviView<MapState> {
     lateinit var viewModelFactory: ViewModelFactory
 
     private var isLocationProviderServiceConnected: Boolean = false
-    private var locationProviderService: LocationProvider? = null
+    private var navigationLocationProviderService: NavigationLocationProvider? = null
     private var navigationMarker: Marker? = null
     private var markersList: MutableList<Marker> = mutableListOf()
 
     private lateinit var serviceIntent: Intent
 
-    private val locationProviderConnection = object : ServiceConnection {
+    private val navigationLocationProviderConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName?, binder: IBinder?) {
             isLocationProviderServiceConnected = true
-            locationProviderService =
-                (binder as LocationProvider.LocationProviderBinder).getService()
+            navigationLocationProviderService =
+                (binder as NavigationLocationProvider.LocationProviderBinder).getService()
             lifecycleScope.launch {
-                locationProviderService?.locationFlow?.collect(this@MapFragment::observeLocations)
+                navigationLocationProviderService?.locationFlow?.collect(this@MapFragment::observeLocations)
             }
-            locationProviderService?.startProvidingLocations(
+            navigationLocationProviderService?.startProvidingLocations(
                 requireNotNull(viewModel.stateFlow.value.direction?.value).points,
                 viewModel.stateFlow.value.speed.toFloat()
             )
@@ -97,7 +98,7 @@ class MapFragment : Fragment(), MviView<MapState> {
 
         override fun onServiceDisconnected(componentName: ComponentName?) {
             isLocationProviderServiceConnected = false
-            locationProviderService = null
+            navigationLocationProviderService = null
             viewModel.handleIntent(MapIntent.ChangeProviderServiceStateIntent(false))
         }
 
@@ -142,7 +143,7 @@ class MapFragment : Fragment(), MviView<MapState> {
         binding.mapNeshanMapView.isPoiEnabled = true
         binding.mapNeshanMapView.setZoom(MAP_ZOOM_INITIAL, MAP_ACTION_TIME)
 
-        serviceIntent = Intent(activity, LocationProvider::class.java)
+        serviceIntent = Intent(activity, NavigationLocationProvider::class.java)
 
         // TODO: Set margin dynamically!
         binding.mapNeshanMapView.settings.setNeshanLogoMargins(12.toPx.toInt(), 112.toPx.toInt())
@@ -259,6 +260,7 @@ class MapFragment : Fragment(), MviView<MapState> {
     }
 
     override fun renderState(state: MapState) {
+        Logit.d(state.toString())
         state.isLoading?.let {
             loadingState(it.value)
         }
@@ -352,10 +354,9 @@ class MapFragment : Fragment(), MviView<MapState> {
 
     private fun renderRouteDetailsState(details: SingleUse<DirectionModel>?) {
         details?.let {
+            changeRouteDetailsTexts(it.value)
+
             it.ifNotUsedBefore()?.let { model ->
-
-                changeRouteDetailsTexts(model)
-
                 removePreviousPolyline()
 
                 currentDirectionPolyline = Polyline(
@@ -485,7 +486,7 @@ class MapFragment : Fragment(), MviView<MapState> {
 
     private fun startProvidingLocation() {
         activity?.startService(serviceIntent)
-        activity?.bindService(serviceIntent, locationProviderConnection, 0)
+        activity?.bindService(serviceIntent, navigationLocationProviderConnection, 0)
     }
 
     private fun stopProvidingLocation() {

@@ -32,7 +32,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.locationtech.jts.linearref.LengthIndexedLine
 
-class LocationProvider : Service() {
+class NavigationLocationProvider : Service() {
     private val binder = LocationProviderBinder()
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
     private var timerJob: Job? = null
@@ -46,7 +46,7 @@ class LocationProvider : Service() {
     val locationFlow: StateFlow<Point?> = _locationFlow
 
     inner class LocationProviderBinder : Binder() {
-        fun getService(): LocationProvider = this@LocationProvider
+        fun getService(): NavigationLocationProvider = this@NavigationLocationProvider
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -138,7 +138,7 @@ class LocationProvider : Service() {
             latitude = point.lat
             longitude = point.lng
             altitude = 0.0
-            speed = this@LocationProvider.speed
+            speed = this@NavigationLocationProvider.speed
             time = System.currentTimeMillis()
             elapsedRealtimeNanos = SystemClock.elapsedRealtimeNanos()
             accuracy = PROVIDER_ACCURACY
@@ -214,7 +214,7 @@ class LocationProvider : Service() {
 
     @SuppressLint("UnspecifiedImmutableFlag")
     private fun createStopServiceAction(): NotificationCompat.Action {
-        val stopSelfIntent = Intent(this, LocationProvider::class.java).apply {
+        val stopSelfIntent = Intent(this, NavigationLocationProvider::class.java).apply {
             action = FOREGROUND_NOTIFICATION_ACTION_STOP
         }
         val stopSelfPendingIntent =
