@@ -17,4 +17,5 @@ object NumericConstants {
     const val MAP_ZOOM_INITIAL = 16F
     const val MAP_ZOOM_DEFAULT = 14F
     const val MAP_ACTION_TIME = 0.1F
+    const val PREFERENCES_SPEED_DEFAULT = 0
 }
