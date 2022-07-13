@@ -10,9 +10,10 @@ import dev.radis.dummock.utils.constants.StringConstants.ARCHIVE_TABLE_NAME
 @Entity(tableName = ARCHIVE_TABLE_NAME)
 data class ArchiveModel(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
-    val title: String,
-    val date: String,
+    var id: Int,
+    var title: String,
+    var date: String,
+    var speed: Int,
     @TypeConverters(DirectionModelTypeConverter::class)
-    val direction: DirectionModel
+    var direction: DirectionModel
 )
