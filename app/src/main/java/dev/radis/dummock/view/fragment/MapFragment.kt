@@ -239,9 +239,11 @@ class MapFragment : Fragment(), MviView<MapState> {
     }
 
     private fun showSpeedDialog() {
+        // TODO: read from shared preferences
         val speedDialog = SpeedDialog().newInstance(50)
         speedDialog.speedListener = { newSpeed ->
-            binding.mapViewBottom.btmSheetRouteDetailSettingsSpeed.text = "$newSpeed"
+            // TODO: save to shared preferences
+            binding.mapViewBottom.btmSheetRouteDetailSettingsSpeed.text = "$newSpeed km/h"
         }
         speedDialog.show(childFragmentManager, SpeedDialog::class.simpleName)
     }

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import dev.radis.dummock.R
 import dev.radis.dummock.databinding.DialogSpeedBinding
 import kotlin.math.abs
 import kotlin.math.max
@@ -50,15 +51,30 @@ class SpeedDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.dialogSteeringWheelTxtSpeed.text = "$speed Km/h"
+
+        binding.dialogSteeringWheelPositive.setOnClickListener {
+            speedListener.invoke(speed)
+            dialog?.dismiss()
+        }
+
+        binding.dialogSteeringWheelNegative.setOnClickListener {
+            dialog?.dismiss()
+        }
+
         binding.dialogSteeringWheel.updateListener = { update ->
             filteredUpdate += update
             if (abs(filteredUpdate) >= SPEED_UPDATE_RATIO) {
                 speed = max(speed + filteredUpdate / SPEED_UPDATE_RATIO, 0)
-                speedListener.invoke(speed)
                 filteredUpdate %= SPEED_UPDATE_RATIO
+                binding.dialogSteeringWheelTxtSpeed.text = "$speed Km/h"
             }
         }
 
+    }
+
+    override fun getTheme(): Int {
+        return R.style.RoundedCornersDialog
     }
 
 }

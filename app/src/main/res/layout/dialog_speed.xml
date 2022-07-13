@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_dialog">
+    android:paddingStart="@dimen/default_margin"
+    android:paddingEnd="@dimen/default_margin">
+
+    <TextView
+        android:id="@+id/dialogSteeringWheelTxtSpeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="50 km/h" />
 
 
     <dev.radis.dummock.view.custom.SteeringWheel
@@ -18,5 +33,34 @@
         app:wheel_line_count="9"
         app:wheel_line_width="6dp"
         app:wheel_out_width="8dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/dialogSteeringWheelPositive"
+        style="@style/DButton.Text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_weight="1"
+        android:text="@string/txt_ok"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dialogSteeringWheel" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/dialogSteeringWheelNegative"
+        style="@style/DButton.Text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/txt_cancel"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/dialogSteeringWheelPositive"
+        app:layout_constraintTop_toBottomOf="@id/dialogSteeringWheel"
+        app:layout_constraintTop_toTopOf="@id/dialogSteeringWheelPositive" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

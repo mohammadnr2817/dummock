@@ -5,6 +5,8 @@
     <string name="txt_map_help">برای شروع مسیریابی، مبدا و مقصد را انتخاب کنید</string>
     <string name="txt_start">شروع</string>
     <string name="txt_save">ذخیره</string>
+    <string name="txt_ok">تایید</string>
+    <string name="txt_cancel">لغو</string>
     <string name="txt_kilometer">کیلومتر</string>
     <string name="txt_minute">دقیقه</string>
     <string name="txt_delay_no">بدون توقف</string>
