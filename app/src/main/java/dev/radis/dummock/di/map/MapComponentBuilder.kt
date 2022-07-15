@@ -1,6 +1,7 @@
 package dev.radis.dummock.di.map
 
 import dev.radis.dummock.di.application.AppComponentBuilder
+import dev.radis.dummock.di.preferences.PreferencesComponentBuilder
 import dev.radis.dummock.di.repository.RepositoryComponentBuilder
 
 object MapComponentBuilder {
@@ -10,6 +11,7 @@ object MapComponentBuilder {
         if (instance == null) instance = DaggerMapComponent.builder()
             .repositoryComponent(RepositoryComponentBuilder.getComponent())
             .appComponent(AppComponentBuilder.getComponent())
+            .preferencesComponent(PreferencesComponentBuilder.getComponent())
             .build()
         return requireNotNull(instance)
     }

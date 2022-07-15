@@ -22,6 +22,10 @@ sealed class MapIntent : MviIntent {
 
     data class ChangeProviderServiceStateIntent(val value: Boolean) : MapIntent()
 
+    data class SaveDefaultSpeedIntent(val value: Int) : MapIntent()
+
+    object GetDefaultSpeedIntent : MapIntent()
+
     object NavigateInAnotherAppIntent : MapIntent()
 
     object ShareRouteIntent : MapIntent()

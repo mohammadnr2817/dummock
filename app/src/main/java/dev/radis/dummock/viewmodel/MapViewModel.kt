@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.radis.dummock.model.entity.DirectionModel
 import dev.radis.dummock.model.entity.Point
+import dev.radis.dummock.model.preference.PreferencesImpl
 import dev.radis.dummock.model.repository.DirectionFileRepository
 import dev.radis.dummock.model.repository.DirectionRepository
 import dev.radis.dummock.utils.SingleUse
@@ -19,6 +20,7 @@ import dev.radis.dummock.utils.mvi.MviModel
 import dev.radis.dummock.view.intent.MapIntent
 import dev.radis.dummock.view.state.MapState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -30,6 +32,7 @@ import javax.inject.Inject
 class MapViewModel @Inject constructor(
     private val directionRepository: DirectionRepository,
     private val directionFileRepository: DirectionFileRepository,
+    private val sharedPreferences: PreferencesImpl,
     private val context: Context
 ) : ViewModel(), MviModel<MapIntent, MapState> {
 
@@ -57,6 +60,27 @@ class MapViewModel @Inject constructor(
             MapIntent.NavigateInAnotherAppIntent -> navigateInAnotherApp()
             MapIntent.RemoveLastLocationIntent -> removeLocationFromLastLocation()
             MapIntent.ShareRouteIntent -> shareRoute()
+            is MapIntent.SaveDefaultSpeedIntent -> setDefaultSpeed(intent.value)
+            MapIntent.GetDefaultSpeedIntent -> getDefaultSpeed()
+        }
+    }
+
+    private fun getDefaultSpeed() {
+        viewModelScope.launch {
+            _stateFlow.emit(
+                stateFlow.value.copy(
+                    speed = sharedPreferences.getDefaultSpeed()
+                )
+            )
+        }
+    }
+
+    private fun setDefaultSpeed(speed: Int) {
+        viewModelScope.launch {
+            async {
+                sharedPreferences.setDefaultSpeed(speed)
+            }.await()
+            getDefaultSpeed()
         }
     }
 
@@ -219,7 +243,7 @@ class MapViewModel @Inject constructor(
                                 distance = it.distance,
                                 duration = it.duration
                             )
-                        )
+                        ), speed = sharedPreferences.getDefaultSpeed()
                     )
                 )
             }

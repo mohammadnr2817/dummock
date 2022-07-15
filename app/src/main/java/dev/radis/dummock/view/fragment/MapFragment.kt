@@ -36,6 +36,7 @@ import dev.radis.dummock.utils.LocationUtils
 import dev.radis.dummock.utils.Logit
 import dev.radis.dummock.utils.SingleUse
 import dev.radis.dummock.utils.constants.DirectionType
+import dev.radis.dummock.utils.constants.NumericConstants.DEFAULT_SPEED_KMH
 import dev.radis.dummock.utils.constants.NumericConstants.FIRST_LOCATION_INDEX
 import dev.radis.dummock.utils.constants.NumericConstants.MAP_ACTION_TIME
 import dev.radis.dummock.utils.constants.NumericConstants.MAP_ZOOM
@@ -78,6 +79,8 @@ class MapFragment : Fragment(), MviView<MapState> {
     private var navigationLocationProviderService: NavigationLocationProvider? = null
     private var navigationMarker: Marker? = null
     private var markersList: MutableList<Marker> = mutableListOf()
+
+    private var directionSpeed = DEFAULT_SPEED_KMH
 
     private lateinit var serviceIntent: Intent
 
@@ -239,11 +242,9 @@ class MapFragment : Fragment(), MviView<MapState> {
     }
 
     private fun showSpeedDialog() {
-        // TODO: read from shared preferences
-        val speedDialog = SpeedDialog().newInstance(50)
+        val speedDialog = SpeedDialog().newInstance(directionSpeed)
         speedDialog.speedListener = { newSpeed ->
-            // TODO: save to shared preferences
-            binding.mapViewBottom.btmSheetRouteDetailSettingsSpeed.text = "$newSpeed km/h"
+            viewModel.handleIntent(MapIntent.SaveDefaultSpeedIntent(newSpeed))
         }
         speedDialog.show(childFragmentManager, SpeedDialog::class.simpleName)
     }
@@ -271,6 +272,7 @@ class MapFragment : Fragment(), MviView<MapState> {
         }
         renderMarkerState(state.markers)
         renderRouteDetailsState(state.direction)
+        renderSpeedState(state.speed)
         switchDirectionType(state.directionRequestType)
         renderProviderServiceState(state.serviceRunning)
         chooseLocationState()
@@ -290,6 +292,11 @@ class MapFragment : Fragment(), MviView<MapState> {
         message.ifNotUsedBefore()?.let {
             Toast.makeText(context, message.value, Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun renderSpeedState(speed: Int) {
+        directionSpeed = speed
+        binding.mapViewBottom.btmSheetRouteDetailSettingsSpeed.text = "$speed km/h"
     }
 
     private fun executeIntentState(

@@ -1,7 +1,7 @@
 package dev.radis.dummock.model.preference
 
 interface Preferences {
-    fun setDefaultSpeed(speed: Int)
+    suspend fun setDefaultSpeed(speed: Int)
 
-    fun getDefaultSpeed(): Int
+    suspend fun getDefaultSpeed(): Int
 }
