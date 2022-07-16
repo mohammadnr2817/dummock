@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import dev.radis.dummock.model.entity.DirectionModel
 import dev.radis.dummock.model.entity.Point
 import dev.radis.dummock.model.preference.PreferencesImpl
+import dev.radis.dummock.model.repository.DatabaseRepository
 import dev.radis.dummock.model.repository.DirectionFileRepository
 import dev.radis.dummock.model.repository.DirectionRepository
 import dev.radis.dummock.utils.SingleUse
@@ -32,6 +33,7 @@ import javax.inject.Inject
 class MapViewModel @Inject constructor(
     private val directionRepository: DirectionRepository,
     private val directionFileRepository: DirectionFileRepository,
+    private val databaseRepository: DatabaseRepository,
     private val sharedPreferences: PreferencesImpl,
     private val context: Context
 ) : ViewModel(), MviModel<MapIntent, MapState> {

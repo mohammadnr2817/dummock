@@ -2,6 +2,7 @@ package dev.radis.dummock.di.database
 
 import dagger.Component
 import dev.radis.dummock.di.application.AppComponent
+import dev.radis.dummock.model.db.ArchiveDao
 import dev.radis.dummock.model.db.ArchiveDatabase
 import javax.inject.Singleton
 
@@ -12,5 +13,7 @@ import javax.inject.Singleton
 interface DatabaseComponent {
 
     fun exposeArchiveDatabases(): ArchiveDatabase
+
+    fun exposeArchiveDao(): ArchiveDao
 
 }

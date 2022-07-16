@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import dagger.Module
 import dagger.Provides
+import dev.radis.dummock.model.db.ArchiveDao
 import dev.radis.dummock.model.db.ArchiveDatabase
 import dev.radis.dummock.utils.constants.StringConstants.ARCHIVE_DATABASE_NAME
 import javax.inject.Singleton
@@ -23,6 +24,6 @@ class DatabaseModule {
 
     @Singleton
     @Provides
-    fun provideArchiveDao(database: ArchiveDatabase) = database.dao()
+    fun provideArchiveDao(database: ArchiveDatabase): ArchiveDao = database.dao()
 
 }
