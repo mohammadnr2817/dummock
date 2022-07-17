@@ -213,6 +213,10 @@ class MapFragment : Fragment(), MviView<MapState> {
             false
         }
 
+        binding.mapViewBottom.btmSheetRouteDetailBtnSave.setOnClickListener {
+            viewModel.handleIntent(MapIntent.SaveRouteIntent)
+        }
+
         binding.mapViewBottom.btmSheetRouteDetailBtnStartNavPeek.setOnClickListener {
             setLocationProviderState()
         }

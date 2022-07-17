@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.radis.dummock.model.entity.DirectionModel
 import dev.radis.dummock.model.entity.Point
+import dev.radis.dummock.model.entity.db.ArchiveModel
 import dev.radis.dummock.model.preference.PreferencesImpl
 import dev.radis.dummock.model.repository.DatabaseRepository
 import dev.radis.dummock.model.repository.DirectionFileRepository
@@ -17,6 +18,7 @@ import dev.radis.dummock.model.repository.DirectionRepository
 import dev.radis.dummock.utils.SingleUse
 import dev.radis.dummock.utils.constants.DirectionType
 import dev.radis.dummock.utils.constants.StringConstants.COPIED
+import dev.radis.dummock.utils.constants.StringConstants.DATE_FORMAT
 import dev.radis.dummock.utils.mvi.MviModel
 import dev.radis.dummock.view.intent.MapIntent
 import dev.radis.dummock.view.state.MapState
@@ -26,6 +28,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.io.File
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
@@ -64,6 +67,26 @@ class MapViewModel @Inject constructor(
             MapIntent.ShareRouteIntent -> shareRoute()
             is MapIntent.SaveDefaultSpeedIntent -> setDefaultSpeed(intent.value)
             MapIntent.GetDefaultSpeedIntent -> getDefaultSpeed()
+            MapIntent.SaveRouteIntent -> saveRouteToDatabase()
+        }
+    }
+
+    private fun saveRouteToDatabase() {
+        viewModelScope.launch {
+            databaseRepository.saveArchive(
+                ArchiveModel(
+                    id = 0,
+                    title = "New test mock",
+                    date = SimpleDateFormat(DATE_FORMAT).format(Date()),
+                    speed = sharedPreferences.getDefaultSpeed(),
+                    direction = stateFlow.value.direction!!.value
+                )
+            )
+            _stateFlow.emit(
+                stateFlow.value.copy(
+                    message = SingleUse("Route saved")
+                )
+            )
         }
     }
 
@@ -245,7 +268,8 @@ class MapViewModel @Inject constructor(
                                 distance = it.distance,
                                 duration = it.duration
                             )
-                        ), speed = sharedPreferences.getDefaultSpeed()
+                        ),
+                        speed = sharedPreferences.getDefaultSpeed()
                     )
                 )
             }
@@ -255,6 +279,7 @@ class MapViewModel @Inject constructor(
     override fun onCleared() {
         directionRepository.dispose()
         directionFileRepository.dispose()
+        databaseRepository.dispose()
         super.onCleared()
     }
 }

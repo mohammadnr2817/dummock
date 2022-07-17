@@ -30,4 +30,6 @@ sealed class MapIntent : MviIntent {
 
     object ShareRouteIntent : MapIntent()
 
+    object SaveRouteIntent : MapIntent()
+
 }
