@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
+import dev.radis.dummock.viewmodel.ArchiveViewModel
 import dev.radis.dummock.viewmodel.MapViewModel
 import dev.radis.dummock.viewmodel.ViewModelFactory
 
@@ -18,5 +19,10 @@ interface ViewModelModule {
     @IntoMap
     @ViewModelKey(MapViewModel::class)
     fun bindMapViewModel(mapViewModel: MapViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ArchiveViewModel::class)
+    fun bindArchiveViewModel(archiveViewModel: ArchiveViewModel): ViewModel
 
 }

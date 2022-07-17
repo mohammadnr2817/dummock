@@ -1,6 +1,7 @@
 package dev.radis.dummock.di.repository
 
 import dev.radis.dummock.di.application.AppComponentBuilder
+import dev.radis.dummock.di.database.DatabaseComponentBuilder
 import dev.radis.dummock.di.networking.NetworkingComponentBuilder
 
 object RepositoryComponentBuilder {
@@ -11,6 +12,7 @@ object RepositoryComponentBuilder {
             DaggerRepositoryComponent.builder()
                 .networkingComponent(NetworkingComponentBuilder.getComponent())
                 .appComponent(AppComponentBuilder.getComponent())
+                .databaseComponent(DatabaseComponentBuilder.getComponent())
                 .build()
         return requireNotNull(instance)
     }
