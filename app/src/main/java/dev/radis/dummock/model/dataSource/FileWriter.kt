@@ -1,6 +1,7 @@
 package dev.radis.dummock.model.dataSource
 
 import android.content.Context
+import dev.radis.dummock.utils.constants.StringConstants.APP_NAME
 import dev.radis.dummock.utils.constants.StringConstants.DUMMOCK_EXTENSION
 import dev.radis.dummock.utils.response.Failure
 import dev.radis.dummock.utils.response.Response
@@ -19,7 +20,7 @@ class FileWriter @Inject constructor(
     private var fileName: String? = ""
 
     init {
-        fileName = System.currentTimeMillis().toString() + DUMMOCK_EXTENSION
+        fileName = APP_NAME + System.currentTimeMillis().toString() + DUMMOCK_EXTENSION
         cachedFile = File(
             context.cacheDir,
             requireNotNull(fileName)
