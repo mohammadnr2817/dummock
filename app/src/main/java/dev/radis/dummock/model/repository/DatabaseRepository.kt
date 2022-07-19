@@ -7,11 +7,9 @@ interface DatabaseRepository {
 
     suspend fun saveArchive(archive: ArchiveModel)
 
-    suspend fun deleteArchive(archive: ArchiveModel)
+    suspend fun deleteArchive(id: Int)
 
     suspend fun getArchive(id: Int): Response<ArchiveModel, Throwable>
 
     suspend fun getArchives(): Response<List<ArchiveModel>, Throwable>
-
-    fun dispose()
 }

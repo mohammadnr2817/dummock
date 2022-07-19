@@ -76,7 +76,7 @@ class MapViewModel @Inject constructor(
             databaseRepository.saveArchive(
                 ArchiveModel(
                     id = 0,
-                    title = "New test mock",
+                    title = "New test mock - ${System.currentTimeMillis()}", // TODO: From input dialog
                     date = SimpleDateFormat(DATE_FORMAT).format(Date()),
                     speed = sharedPreferences.getDefaultSpeed(),
                     direction = stateFlow.value.direction!!.value
@@ -279,7 +279,6 @@ class MapViewModel @Inject constructor(
     override fun onCleared() {
         directionRepository.dispose()
         directionFileRepository.dispose()
-        databaseRepository.dispose()
         super.onCleared()
     }
 }

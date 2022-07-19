@@ -72,12 +72,7 @@ class ArchiveViewModel @Inject constructor(
 
     private fun deleteArchiveFromDatabase(archive: ArchiveModel) {
         viewModelScope.launch {
-            databaseRepository.deleteArchive(archive)
+            databaseRepository.deleteArchive(archive.id)
         }
-    }
-
-    override fun onCleared() {
-        databaseRepository.dispose()
-        super.onCleared()
     }
 }
