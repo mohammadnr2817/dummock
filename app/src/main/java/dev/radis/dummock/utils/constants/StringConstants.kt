@@ -24,6 +24,7 @@ object StringConstants {
     const val FOREGROUND_NOTIFICATION_ACTION_STOP = "Stop"
     const val PREFERENCES_SPEED_KEY = "speed_key"
     const val DATE_FORMAT = "yyyy.MM.dd HH:mm:ss"
+    const val MOVE_SPEED_FA = " کیلومتر بر ساعت"
 }
 
 @StringDef(DIRECTION_TYPE_CAR, DIRECTION_TYPE_BIKE)

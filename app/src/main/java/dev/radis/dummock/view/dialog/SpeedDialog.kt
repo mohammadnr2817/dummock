@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import dev.radis.dummock.R
 import dev.radis.dummock.databinding.DialogSpeedBinding
+import dev.radis.dummock.utils.constants.StringConstants.MOVE_SPEED_FA
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -51,7 +52,7 @@ class SpeedDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.dialogSteeringWheelTxtSpeed.text = "$speed Km/h"
+        binding.dialogSteeringWheelTxtSpeed.text = "$speed$MOVE_SPEED_FA"
 
         binding.dialogSteeringWheelPositive.setOnClickListener {
             speedListener.invoke(speed)
@@ -67,7 +68,7 @@ class SpeedDialog : DialogFragment() {
             if (abs(filteredUpdate) >= SPEED_UPDATE_RATIO) {
                 speed = max(speed + filteredUpdate / SPEED_UPDATE_RATIO, 0)
                 filteredUpdate %= SPEED_UPDATE_RATIO
-                binding.dialogSteeringWheelTxtSpeed.text = "$speed Km/h"
+                binding.dialogSteeringWheelTxtSpeed.text = "$speed$MOVE_SPEED_FA"
             }
         }
 

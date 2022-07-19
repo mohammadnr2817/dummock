@@ -24,4 +24,5 @@
     <string name="intent_navigate">geo:%1$s,%2$s?q=%3$s,%4$s</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="txt_move_speed_fa">سرعت حرکت:</string>
 </resources>
