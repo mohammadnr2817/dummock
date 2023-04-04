@@ -4,7 +4,8 @@
 Spoofs location information by GPS and Network providers which allows users to fake their location with some custom location/route of their choice.
 This could help eradicate the risk of getting tracked down by possible trackers/hackers.
 
-Used MVVM + MVI architecure as practice.Feel free to explore and make suggestions.
+I wrote this project as a practice, feel free to explore and make suggestions.
+Some tech stacks: **MVVM + MVI architecture, Dagger2 DI, Room database, Neshan Apis, Custom view**.
 
 Some screenshots:
 
